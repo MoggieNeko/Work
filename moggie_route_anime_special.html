@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>攻略 Moggie：白色情人節特別版</title>
+<style>
+  :root{
+    --bg1:#fff6fb;
+    --bg2:#edf9f0;
+    --ink:#2f2430;
+    --sub:#6c5b67;
+    --card:rgba(255,255,255,.84);
+    --line:rgba(54,38,52,.08);
+    --accent:#ff7fb0;
+    --accent2:#8fdaac;
+    --accent3:#7d8cff;
+    --shadow:0 18px 45px rgba(71, 43, 74, .14);
+    --good:#ff5f98;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);}
+  body{
+    background:
+      radial-gradient(circle at top left, rgba(255,170,205,.35), transparent 32%),
+      radial-gradient(circle at top right, rgba(160,230,186,.33), transparent 34%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    min-height:100vh;
+  }
+  .app{
+    max-width:900px;
+    margin:0 auto;
+    min-height:100vh;
+    padding:14px 12px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .topbar,.footerbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    font-weight:800;
+    font-size:1rem;
+    letter-spacing:.02em;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .brand .dot{
+    width:12px;height:12px;border-radius:999px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 0 0 4px rgba(255,255,255,.65);
+  }
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  button{
+    border:none;
+    border-radius:14px;
+    padding:10px 14px;
+    font-weight:700;
+    color:var(--ink);
+    background:rgba(255,255,255,.82);
+    box-shadow:0 8px 24px rgba(74,45,81,.09);
+  }
+  button:disabled{opacity:.45}
+  .primary{
+    background:linear-gradient(135deg,#ff87b6,#8fdaac);
+    color:#fff;
+  }
+  .warn{
+    background:linear-gradient(135deg,#ffd7e6,#fff3bf);
+  }
+  .layout{
+    display:grid;
+    grid-template-columns: 1.02fr .98fr;
+    gap:12px;
+    flex:1;
+  }
+  .panel{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:26px;
+    box-shadow:var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+  .portraitPanel{
+    position:relative;
+    padding:14px;
+    overflow:hidden;
+    min-height:360px;
+  }
+  .portraitBg{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,183,210,.38), transparent 26%),
+      radial-gradient(circle at 80% 15%, rgba(168,238,192,.4), transparent 26%),
+      linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.25));
+    opacity:.92;
+  }
+  .chapterBadge{
+    position:relative;
+    z-index:2;
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.78);
+    border:1px solid rgba(53,43,52,.08);
+    font-size:.86rem;
+    font-weight:700;
+    color:var(--sub);
+  }
+  .portraitWrap{
+    position:relative;
+    z-index:2;
+    margin-top:8px;
+    min-height:280px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  
+
+.avatarCard{
+    --gaze-x:0px;
+    --gaze-y:0px;
+    --pupil-x:0px;
+    --pupil-y:0px;
+    --head-tilt:0deg;
+    --eye-open:1;
+    --blush-opacity:.08;
+    --brow-left-rot:-7deg;
+    --brow-right-rot:7deg;
+    --brow-left-y:0px;
+    --brow-right-y:0px;
+    width:min(100%,420px);
+    aspect-ratio:1 / 1.12;
+    position:relative;
+    border-radius:30px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.95), rgba(255,255,255,0) 34%),
+      radial-gradient(circle at 18% 18%, rgba(255,174,206,.32), rgba(255,174,206,0) 24%),
+      radial-gradient(circle at 84% 18%, rgba(166,239,196,.32), rgba(166,239,196,0) 24%),
+      linear-gradient(180deg, rgba(255,255,255,.97), rgba(245,251,247,.94));
+    border:1px solid rgba(60,44,61,.08);
+    box-shadow:0 20px 44px rgba(85,50,83,.15);
+    transition:box-shadow .22s ease, transform .22s ease;
+  }
+  .avatarCard.mood-love{box-shadow:0 20px 52px rgba(255,105,160,.24)}
+  .avatarCard.mood-flustered{animation:floaty .9s ease-in-out infinite}
+  .avatarCard.mood-annoyed{animation:tinyshake .35s linear 2}
+  .avatarCard.mood-happy{animation:pulseGlow 1.6s ease-in-out infinite}
+  .avatarCard.mood-touched{animation:warmFloat 2.2s ease-in-out infinite}
+  .avatarCard.mood-surprised{transform:translateY(-1px)}
+  .avatarCard.mood-soft{--eye-open:.95; --blush-opacity:.1}
+  .avatarCard.mood-happy{--eye-open:.86; --blush-opacity:.18; --brow-left-rot:-10deg; --brow-right-rot:10deg}
+  .avatarCard.mood-shy,
+  .avatarCard.mood-touched,
+  .avatarCard.mood-flustered,
+  .avatarCard.mood-love{--blush-opacity:.95}
+  .avatarCard.mood-teasing{--eye-open:.9; --brow-left-rot:-16deg; --brow-right-rot:12deg; --brow-right-y:-2px}
+  .avatarCard.mood-surprised{--eye-open:1.12; --brow-left-y:-6px; --brow-right-y:-6px}
+  .avatarCard.mood-touched{--eye-open:.82; --brow-left-rot:-5deg; --brow-right-rot:5deg}
+  .avatarCard.mood-annoyed{--eye-open:.72; --blush-opacity:.02; --brow-left-rot:-24deg; --brow-right-rot:18deg; --brow-left-y:-3px; --brow-right-y:-3px}
+  .avatarCard.mood-sleepy{--eye-open:.2; --brow-left-y:4px; --brow-right-y:4px; --brow-left-rot:-4deg; --brow-right-rot:4deg}
+  .avatarCard.mood-flustered{--eye-open:.84; --brow-left-rot:-12deg; --brow-right-rot:10deg}
+  .avatarCard.mood-thinking{--eye-open:.8; --brow-left-rot:-12deg; --brow-right-rot:16deg; --brow-right-y:-2px}
+  .avatarCard.mood-confident{--eye-open:.92; --brow-left-rot:-14deg; --brow-right-rot:14deg}
+  .avatarCard.mood-love{--eye-open:.76; --brow-left-rot:-8deg; --brow-right-rot:8deg}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @keyframes tinyshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+  @keyframes pulseGlow{0%,100%{box-shadow:0 20px 44px rgba(85,50,83,.15)}50%{box-shadow:0 20px 54px rgba(255,122,174,.18)}}
+  @keyframes warmFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+  .animeStage{position:absolute; inset:0; overflow:hidden}
+  .animeOrb{
+    position:absolute; border-radius:999px; filter:blur(.3px);
+    animation:orbFloat 7s ease-in-out infinite;
+  }
+  .animeOrb.orb1{width:72px;height:72px;left:22px;top:22px;background:rgba(255,188,218,.42)}
+  .animeOrb.orb2{width:58px;height:58px;right:26px;top:34px;background:rgba(175,239,193,.46);animation-delay:-2.6s}
+  .animeOrb.orb3{width:34px;height:34px;right:62px;top:90px;background:rgba(255,226,144,.52);animation-delay:-4.5s}
+  @keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.04)}}
+
+  .animeSvg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
+  .animeRig{transform:translate(calc(var(--gaze-x) * .12), calc(var(--gaze-y) * .08)); transform-origin:50% 94%; animation:rigFloat 3.8s ease-in-out infinite}
+  @keyframes rigFloat{0%,100%{transform:translate(calc(var(--gaze-x) * .12), calc(var(--gaze-y) * .08))}50%{transform:translate(calc(var(--gaze-x) * .12), calc(var(--gaze-y) * .08 - 5px))}}
+  .headGroup{transform:translate(calc(var(--gaze-x) * .46), calc(var(--gaze-y) * .26)) rotate(var(--head-tilt)); transform-origin:210px 238px; animation:headFloat 4.4s ease-in-out infinite}
+  @keyframes headFloat{0%,100%{transform:translate(calc(var(--gaze-x) * .46), calc(var(--gaze-y) * .26)) rotate(var(--head-tilt))}50%{transform:translate(calc(var(--gaze-x) * .46), calc(var(--gaze-y) * .26 - 3px)) rotate(calc(var(--head-tilt) * 1.08))}}
+  .bodyGroup{animation:bodyFloat 4.6s ease-in-out infinite; transform-origin:210px 420px}
+  @keyframes bodyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(2px)}}
+
+  .lineMain{stroke:#3c2e38; stroke-width:4; stroke-linecap:round; stroke-linejoin:round}
+  .lineSoft{stroke:#6c5965; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round}
+  .hairFill{fill:url(#hairGrad)}
+  .hairShine{fill:rgba(255,255,255,.14)}
+  .skinFill{fill:url(#skinGrad)}
+  .earFill{fill:#f8d7c9}
+  .blush{fill:url(#blushGrad); opacity:var(--blush-opacity); transition:opacity .18s ease}
+  .mole{fill:#7c5952}
+  .neckFill{fill:#f2cdbd}
+  .bodyFill{fill:url(#mintGrad)}
+  .bodyShadow{fill:#b7e3bf}
+  .pipeFill{fill:url(#pipeGrad)}
+  .buttonFill{fill:#f7e39d; stroke:#8f7545; stroke-width:2}
+  .pinStroke{stroke:#8a6f44; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+  .shadowEllipse{fill:rgba(172,193,179,.34); filter:blur(3px)}
+
+  .brow{transition:transform .18s ease; transform-box:fill-box; transform-origin:center}
+  .brow.left{transform:translateY(var(--brow-left-y)) rotate(var(--brow-left-rot))}
+  .brow.right{transform:translateY(var(--brow-right-y)) rotate(var(--brow-right-rot))}
+  .browStroke{fill:none; stroke:#29242d; stroke-width:5.2; stroke-linecap:round}
+
+  .eyeCore{transform:scaleY(var(--eye-open)); transform-box:fill-box; transform-origin:center; transition:transform .18s ease}
+  .avatarCard.blinking .eyeCore{transform:scaleY(.06)!important}
+  .eyeWhite{fill:#fffdfd; stroke:#29242d; stroke-width:3.5; stroke-linejoin:round}
+  .eyeLash{fill:none; stroke:#1f1b22; stroke-width:5.5; stroke-linecap:round; stroke-linejoin:round}
+  .eyeLower{fill:none; stroke:rgba(53,41,52,.35); stroke-width:2.4; stroke-linecap:round}
+  .irisWrap{transform:translate(var(--pupil-x), var(--pupil-y)); transform-box:fill-box; transform-origin:center; transition:transform .12s linear}
+  .iris{fill:url(#irisGrad)}
+  .irisRing{fill:none; stroke:#201a20; stroke-width:1.6; opacity:.45}
+  .pupil{fill:#171318}
+  .eyeHighlight{fill:rgba(255,255,255,.96)}
+  .eyeHighlight.small{fill:rgba(255,255,255,.72)}
+
+  .nose{fill:none; stroke:#d39e97; stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; opacity:.82}
+
+  .mouth{display:none; fill:none; stroke:#8d5c69; stroke-width:4.2; stroke-linecap:round; stroke-linejoin:round}
+  .mouth-fill{fill:#e98faa; stroke:#8d5c69; stroke-width:3.2}
+  .mouth-neutral{display:block}
+  .avatarCard.mood-happy .mouth-neutral,
+  .avatarCard.mood-love .mouth-neutral,
+  .avatarCard.mood-touched .mouth-neutral,
+  .avatarCard.mood-confident .mouth-neutral,
+  .avatarCard.mood-teasing .mouth-neutral,
+  .avatarCard.mood-annoyed .mouth-neutral,
+  .avatarCard.mood-surprised .mouth-neutral,
+  .avatarCard.mood-sleepy .mouth-neutral,
+  .avatarCard.mood-flustered .mouth-neutral{display:none}
+  .avatarCard.mood-happy .mouth-smile,
+  .avatarCard.mood-love .mouth-smile,
+  .avatarCard.mood-touched .mouth-smile,
+  .avatarCard.mood-flustered .mouth-smile{display:block}
+  .avatarCard.mood-confident .mouth-grin,
+  .avatarCard.mood-teasing .mouth-grin{display:block}
+  .avatarCard.mood-annoyed .mouth-annoyed{display:block}
+  .avatarCard.mood-surprised .mouth-o{display:block}
+  .avatarCard.mood-sleepy .mouth-sleepy{display:block}
+  .avatarCard.talking-a .mouth,
+  .avatarCard.talking-o .mouth{display:none!important}
+  .avatarCard.talking-a .mouth-talk-a{display:block}
+  .avatarCard.talking-o .mouth-talk-o{display:block}
+
+  .handSleeve{fill:#c7efcf; stroke:#4d5e54; stroke-width:3.2; stroke-linecap:round; stroke-linejoin:round}
+  .handSkin{fill:#f6ddd0; stroke:#c9998d; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
+
+  .emoteLayer{position:absolute; inset:0; pointer-events:none}
+  .emote{position:absolute; font-weight:900; opacity:0; transform:translateY(6px) scale(.85); transition:opacity .2s ease, transform .2s ease; filter:drop-shadow(0 8px 14px rgba(0,0,0,.08))}
+  .emote.hearts{left:18px; top:76px; font-size:22px; color:#ff6ea6}
+  .emote.sparkle{right:28px; top:98px; font-size:26px; color:#ffd36c}
+  .emote.question{right:34px; top:72px; font-size:28px; color:#8578ff}
+  .emote.zzz{right:18px; top:46px; font-size:24px; color:#7aa7d8}
+  .emote.anger{right:22px; top:98px; font-size:24px; color:#ff5d72}
+  .emote.shock{left:28px; top:90px; font-size:28px; color:#7d8cff}
+  .avatarCard.mood-love .emote.hearts,
+  .avatarCard.mood-flustered .emote.hearts{opacity:1; transform:translateY(0) scale(1); animation:emoteFloat 1.8s ease-in-out infinite}
+  .avatarCard.mood-happy .emote.sparkle,
+  .avatarCard.mood-touched .emote.sparkle,
+  .avatarCard.mood-confident .emote.sparkle{opacity:1; transform:translateY(0) scale(1); animation:sparkleTwinkle 1.6s ease-in-out infinite}
+  .avatarCard.mood-thinking .emote.question,
+  .avatarCard.mood-teasing .emote.question{opacity:1; transform:translateY(0) scale(1)}
+  .avatarCard.mood-sleepy .emote.zzz{opacity:1; transform:translateY(0) scale(1); animation:emoteFloat 1.5s ease-in-out infinite}
+  .avatarCard.mood-annoyed .emote.anger{opacity:1; transform:translateY(0) scale(1)}
+  .avatarCard.mood-surprised .emote.shock{opacity:1; transform:translateY(0) scale(1)}
+  @keyframes emoteFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.05)}}
+  @keyframes sparkleTwinkle{0%,100%{transform:translateY(0) scale(1); opacity:.6}50%{transform:translateY(-4px) scale(1.14); opacity:1}}
+  .reactionBubble{
+    position:absolute; top:16px; right:16px; z-index:5; max-width:58%; padding:10px 12px;
+    border-radius:18px 18px 6px 18px; background:rgba(255,255,255,.96); border:1px solid rgba(65,44,63,.08);
+    box-shadow:0 12px 28px rgba(82,49,82,.13); font-size:.92rem; line-height:1.4; transform-origin:top right; animation:bubbleIn .25s ease-out;
+  }
+  @keyframes bubbleIn{from{opacity:0; transform:scale(.88) translateY(-6px)}to{opacity:1; transform:scale(1) translateY(0)}}
+.statusRow{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+    margin-top:12px;
+    position:relative;
+    z-index:2;
+  }
+  .stat{
+    padding:10px 10px 11px;
+    border-radius:18px;
+    background:rgba(255,255,255,.74);
+    border:1px solid rgba(63,43,55,.07);
+  }
+  .stat .label{
+    font-size:.74rem;
+    color:var(--sub);
+    margin-bottom:6px;
+    font-weight:700;
+  }
+  .meter{
+    height:8px;
+    background:rgba(94,71,88,.08);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#ff8ab8,#8fdaac);
+    transition:width .35s ease;
+  }
+  .score{
+    font-size:.84rem;
+    margin-top:6px;
+    font-weight:800;
+  }
+  .storyPanel{
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    min-height:360px;
+  }
+  .speakerTag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.8);
+    border:1px solid rgba(58,43,55,.08);
+    width:max-content;
+    font-size:.88rem;
+    font-weight:800;
+  }
+  .speakerDot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+  .textbox{
+    min-height:182px;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(59,42,54,.08);
+    border-radius:24px;
+    padding:16px 15px;
+    line-height:1.78;
+    font-size:1.02rem;
+    position:relative;
+  }
+  .textbox .sceneTitle{
+    font-size:.83rem;
+    color:var(--sub);
+    font-weight:800;
+    letter-spacing:.04em;
+    margin-bottom:10px;
+    text-transform:uppercase;
+  }
+  .choices{
+    display:grid;
+    gap:10px;
+  }
+  .choice{
+    text-align:left;
+    border-radius:20px;
+    padding:14px 14px;
+    background:rgba(255,255,255,.88);
+    border:1px solid rgba(59,42,54,.08);
+    box-shadow:0 10px 24px rgba(78,49,83,.08);
+    font-size:.98rem;
+    line-height:1.45;
+  }
+  .choice small{
+    display:block;
+    margin-top:5px;
+    color:var(--sub);
+    font-weight:600;
+  }
+  .typing{
+    display:inline-block;
+    width:10px;height:1.15em;
+    vertical-align:-2px;
+    border-right:2px solid rgba(50,39,48,.52);
+    animation:blink 1s step-end infinite;
+    margin-left:2px;
+  }
+  @keyframes blink{50%{opacity:0}}
+  .toast{
+    position:fixed;
+    left:50%; bottom:18px;
+    transform:translateX(-50%) translateY(18px);
+    padding:12px 16px;
+    border-radius:18px;
+    background:rgba(46,31,45,.92);
+    color:#fff;
+    font-weight:700;
+    font-size:.95rem;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s ease;
+    z-index:50;
+    box-shadow:0 16px 32px rgba(32,18,31,.26);
+    max-width:min(90vw,560px);
+    text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .endingCard{
+    padding:18px;
+    border-radius:26px;
+    background:rgba(255,255,255,.82);
+    border:1px solid rgba(55,40,52,.08);
+    box-shadow:var(--shadow);
+    line-height:1.7;
+  }
+  .endingTag{
+    display:inline-flex;
+    padding:8px 12px;
+    border-radius:999px;
+    background:linear-gradient(135deg, rgba(255,137,185,.15), rgba(143,218,172,.18));
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .endingTitle{font-size:1.35rem;font-weight:900;margin-bottom:10px}
+  .endingMeta{color:var(--sub);font-weight:700;margin-bottom:10px}
+  .letter{
+    padding:14px;
+    border-radius:20px;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(58,42,54,.08);
+    margin-top:12px;
+  }
+  .modal{
+    position:fixed; inset:0;
+    background:rgba(27,18,28,.44);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:80;
+    padding:14px;
+  }
+  .modal.show{display:flex}
+  .sheet{
+    width:min(880px,100%);
+    max-height:82vh;
+    overflow:auto;
+    background:rgba(255,255,255,.97);
+    border-radius:28px;
+    padding:16px;
+    box-shadow:0 22px 54px rgba(32,18,31,.28);
+  }
+  .sheet h3{margin:0 0 8px;font-size:1.2rem}
+  .sheet p{color:var(--sub);margin-top:0}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+  }
+  .tile{
+    padding:14px;
+    border-radius:20px;
+    background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,248,.96));
+    border:1px solid rgba(60,43,56,.08);
+    min-height:140px;
+  }
+  .tile.locked{
+    filter:grayscale(1);
+    opacity:.55;
+  }
+  .tile .name{font-weight:900;margin-bottom:8px}
+  .tile .desc{font-size:.92rem;line-height:1.55;color:var(--sub)}
+  .tagMini{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:999px;
+    background:rgba(255,131,178,.12);
+    color:#8c4462;
+    font-size:.78rem;
+    font-weight:800;
+    margin-bottom:8px;
+  }
+  .titleScreen{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:14px;
+    padding:8px 0 18px;
+  }
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:22px 18px;
+    border-radius:30px;
+    background:rgba(255,255,255,.82);
+    border:1px solid rgba(59,42,53,.08);
+    box-shadow:var(--shadow);
+  }
+  .hero h1{
+    margin:0 0 10px;
+    font-size:clamp(1.68rem,5vw,2.7rem);
+    line-height:1.12;
+  }
+  .hero p{line-height:1.75;color:var(--sub);margin:0}
+  .hero .mini{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .miniCard{
+    padding:12px;
+    border-radius:20px;
+    background:rgba(255,255,255,.75);
+    border:1px solid rgba(59,42,55,.08);
+    font-size:.92rem;
+    line-height:1.6;
+  }
+  .nameInput{
+    width:100%;
+    padding:14px 16px;
+    border-radius:20px;
+    border:1px solid rgba(59,42,55,.08);
+    background:rgba(255,255,255,.88);
+    font-size:1rem;
+    outline:none;
+    box-shadow:0 12px 28px rgba(77,49,81,.08);
+  }
+  .helper{
+    font-size:.88rem;
+    color:var(--sub);
+    margin-top:8px;
+  }
+  .fine{color:var(--sub);font-size:.84rem;line-height:1.65}
+  .hidden{display:none !important}
+  .footerbar{justify-content:center}
+  .closebtn{float:right}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  @media (max-width:760px){
+    .layout{grid-template-columns:1fr}
+    .portraitPanel,.storyPanel{min-height:auto}
+    .statusRow{grid-template-columns:repeat(2,1fr)}
+    .reactionBubble{max-width:68%; font-size:.88rem}
+    .textbox{min-height:200px}
+    .hero .mini{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="notesModal">
+  <div class="sheet">
+    <button class="closebtn" onclick="toggleModal('notesModal',false)">關閉</button>
+    <h3>Moggie 檔案庫</h3>
+    <p>玩得越深，解鎖的資料越多。真結局通常需要你不只「撩」到他，而是真正理解他。</p>
+    <div class="grid" id="notesGrid"></div>
+  </div>
+</div>
+
+<div class="modal" id="galleryModal">
+  <div class="sheet">
+    <button class="closebtn" onclick="toggleModal('galleryModal',false)">關閉</button>
+    <h3>結局圖鑑</h3>
+    <p>已解鎖的結局會永久保存。不同路線看的不是同一句告白，而是 Moggie 對你不同方式的心動。</p>
+    <div class="grid" id="endingsGrid"></div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  saveKey: "moggie_whiteday_special_v3",
+  endingsKey: "moggie_whiteday_special_v3_endings",
+  notesKey: "moggie_whiteday_special_v3_notes",
+  title: "攻略 Moggie：白色情人節·專屬版·日漫風",
+  subtitle: "她要靠選擇、記憶與默契，把 Moggie 的心動值推到 100。",
+  whiteDayNote: "白色情人節快樂。能讓我一次次心動的，從來都不是很誇張的招式，而是你每一次都真的把我放在心上。"
+};
+
+const notesData = [
+  {id:"look", name:"第一印象", tag:"人物設定", desc:"黑髮微亂、笑意偏收、右頰小痣、薄荷綠居家睡衣。看起來軟，但不是誰都能直接走進去。"},
+  {id:"music", name:"音樂偏好", tag:"喜好", desc:"Moggie 喜歡 Reol；妳喜歡 Vaundy。真正的高分答案不是要一樣，而是懂得欣賞彼此的 loop 清單。"},
+  {id:"animals", name:"動物檔案", tag:"喜好", desc:"Moggie 偏愛暹羅貓；妳喜歡狸花貓、唐貓、唐狗，還有布甸狗。最強解法通常不是爭誰贏，而是一起養一個世界觀。"},
+  {id:"cake", name:"蛋糕事件", tag:"回憶", desc:"有次妳整蛋糕找不到攪拌器，整個人快發狂。Moggie 在旁邊笑妳。這段回憶會大幅影響『安心值』與『撩度』的走向。"},
+  {id:"sleep", name:"抱住瞓", tag:"回憶", desc:"攪 OCamp 的某晚太累，兩個人抱著睡。這條線是慢熱系 Moggie 很重要的信任錨點。"},
+  {id:"ocamp", name:"初相識 OCamp", tag:"回憶", desc:"第一次去上莊 OCamp，從日本音樂聊起。很多關係不是因為大事件開始，而是因為剛好有人接得住你的話。"},
+  {id:"claw", name:"神勇現場", tag:"回憶", desc:"夾公仔與扔彩虹時的超常發揮，會觸發 Moggie 的『欣賞』與『你其實好勁』反應。"},
+  {id:"mbti", name:"人格組合", tag:"設定", desc:"Moggie 是 INFP 雙子座；妳是 ENTP 獅子座。看似一靜一動，其實很適合玩互相試探又互相接球的節奏。"},
+  {id:"rule", name:"攻略原則", tag:"機制", desc:"Moggie 不太吃硬衝。妳如果能記得細節、在對的時候溫柔、又偶爾帶點機智挑逗，成功率會大幅上升。"}
+];
+
+const endings = {
+  TRUE: {
+    title:"白色情人節·真結局",
+    tag:"Hidden True",
+    mood:"love",
+    summary:"妳不是只把 Moggie 逗笑，而是真的一步步讀懂了他。",
+    text:`妳把那些看起來零碎的小事都記住了：第一次在 OCamp 談日本音樂、蛋糕攪拌器失蹤時的慌亂、攬住瞓那晚的安心、夾公仔與扔彩虹的神勇、還有彼此喜歡的貓和歌手。<br><br>到最後，Moggie 看著妳，沒有再把話藏住：<br><br>「妳好像真的好識我。唔係表面上嗰種識，係連我會因為咩細節心軟、會喺咩時候想有人陪，都被妳記住咗。」<br><br>「咁……白色情人節，俾妳正式攻略成功啦。」`,
+    letter:`<strong>特典信件</strong><br>${CONFIG.whiteDayNote}<br><br>—— Moggie`
+  },
+  MUSIC: {
+    title:"音樂靈魂同步",
+    tag:"Good End",
+    mood:"happy",
+    summary:"從 Reol 到 Vaundy，你們沒有變成一樣的人，卻變成了很懂彼此的人。",
+    text:`妳沒有硬把自己的喜歡塞給他，也沒有要求他跟妳完全同步。妳只是很自然地把「妳喜歡 Vaundy，而我喜歡 Reol」變成一種交換世界的方法。<br><br>Moggie 低聲笑了一下：「我覺得之後我應該會因為妳，聽更多本來唔會主動搵嘅歌。」`
+  },
+  PILLOW: {
+    title:"抱住瞓路線",
+    tag:"Good End",
+    mood:"touched",
+    summary:"妳讓他記住的不是一句情話，而是可以安心靠過去的體溫。",
+    text:`那晚太累，誰都沒有再演得很厲害。妳只是把 Moggie 接住，沒有問多餘的問題。<br><br>他後來承認，自己真正陷下去的瞬間，不是被撩，而是被安頓。`
+  },
+  CAKE: {
+    title:"攪拌器失蹤也可以戀愛",
+    tag:"Good End",
+    mood:"flustered",
+    summary:"最狼狽的時候被你看見，偏偏也最容易心動。",
+    text:`妳在最崩潰的那次整蛋糕事故裡，沒有只顧著鬧。妳把場面鬧得很好笑，但又真的有把他拉進來一起解決。<br><br>Moggie 捂著臉笑：「原來被妳兇完再被妳拉去幫手，係會上癮嘅。」`
+  },
+  HERO: {
+    title:"夾公仔女王",
+    tag:"Good End",
+    mood:"confident",
+    summary:"妳一出手就像開了掛，Moggie 當場被妳帥到。",
+    text:`夾公仔和扔彩虹的那一刻，妳根本沒想太多，只是很自然地發揮。可對 Moggie 來說，那種「贏完第一時間先望向我」的樣子，比中獎本身更致命。`
+  },
+  CAT: {
+    title:"貓狗宇宙共居",
+    tag:"Good End",
+    mood:"soft",
+    summary:"暹羅貓、狸花、唐貓唐狗、還有布甸狗，最後全住進你們的共同世界。",
+    text:`你們沒有在「到底誰喜歡的動物比較可愛」這種問題上分勝負。妳反而把那些不同，變成了以後可以一起看的風景。<br><br>Moggie 小聲補了一句：「如果有一日真係一齊住……我覺得會幾熱鬧。」`
+  },
+  OPPOSITES: {
+    title:"ENTP × INFP，獅子 × 雙子",
+    tag:"Good End",
+    mood:"teasing",
+    summary:"妳會鬧，他會躲；妳會衝，他會想。但奇怪的是，節奏剛好對上。",
+    text:`妳們不是同一型，但每次對話都像有來有回的 ping pong。Moggie 明明容易想太多，卻總被妳那種又快又亮的節奏逗得收不住笑。`
+  },
+  SOFT: {
+    title:"慢熱成功線",
+    tag:"Normal End",
+    mood:"soft",
+    summary:"沒有一下子爆衝，也還是走到了喜歡。",
+    text:`不是每段心動都要轟烈。妳選的，是一條讓 Moggie 慢慢把心交出來的路。<br><br>最後他看著妳，輕聲說：「雖然我仲係有啲慢，但我想繼續同妳行落去。」`
+  },
+  FRIEND: {
+    title:"差半步的特別關係",
+    tag:"Bittersweet",
+    mood:"thinking",
+    summary:"他很信任妳，也很喜歡跟妳一起，只是最後那句還沒說出口。",
+    text:`你們已經很近了，近到所有人都以為只差一句。只是 Moggie 還想再確認一下，妳是不是真的願意一直讀懂這個有點慢、有點敏感、但其實很想被珍惜的人。`
+  },
+  TEASE: {
+    title:"撩過頭了啦",
+    tag:"Bad End",
+    mood:"annoyed",
+    summary:"妳太會玩，他卻來不及確定自己是否被認真對待。",
+    text:`Moggie 不是不能被撩，只是如果全程都像在玩，他會開始把自己的心收回去。<br><br>他最後皺了皺眉：「我知道妳好叻，但我分唔清妳係認真，定只係覺得我好玩。」`
+  },
+  MISS: {
+    title:"妳差一點就懂了",
+    tag:"Bad End",
+    mood:"surprised",
+    summary:"妳有衝，有撩，也有可愛，但沒抓到真正關鍵。",
+    text:`妳以為高分答案是轟烈，其實 Moggie 更在意那些細節：記得他的歌、知道他喜歡哪種貓、明白他被接住時會鬆下來。少了這些，最後就只差一點。`
+  },
+  HALF: {
+    title:"心動未滿 100",
+    tag:"Bad End",
+    mood:"sleepy",
+    summary:"這次的攻略還不夠深。重來一次，妳可能會看到完全不同的他。",
+    text:`Moggie 對妳不是完全沒感覺，只是還沒到願意把自己交出去的程度。<br><br>或許再多一點耐心、再少一點亂槍打鳥，下次會更接近答案。`
+  }
+};
+
+const expressionMap = {
+  soft: {
+    class:"mood-soft", reaction:"……嗯，先聽妳講。",
+    leftEye:"M101 169 Q120 176 139 169", rightEye:"M163 169 Q182 176 201 169",
+    leftBrow:"M94 147 Q118 138 142 144", rightBrow:"M160 144 Q184 138 208 147",
+    mouthClosed:"M128 225 Q151 234 172 225", mouthTalk:["M130 226 Q151 240 171 226","M129 226 Q151 231 173 226"],
+    blush:0, heart:0, shock:0, anger:0, zzz:0, sparkle:0, question:0
+  },
+  happy: {
+    class:"mood-happy", reaction:"被妳逗到想笑。",
+    leftEye:"M100 167 Q120 182 140 167", rightEye:"M162 167 Q182 182 202 167",
+    leftBrow:"M96 145 Q118 136 142 142", rightBrow:"M160 142 Q183 136 206 145",
+    mouthClosed:"M123 221 Q151 244 178 221", mouthTalk:["M121 221 Q151 252 181 221","M124 223 Q151 240 178 223"],
+    blush:0, heart:0, shock:0, anger:0, zzz:0, sparkle:1, question:0
+  },
+  shy: {
+    class:"mood-shy", reaction:"……唔好再咁望住我。",
+    leftEye:"M102 169 Q120 178 138 169", rightEye:"M164 169 Q182 178 200 169",
+    leftBrow:"M96 145 Q118 138 142 144", rightBrow:"M160 144 Q182 138 206 145",
+    mouthClosed:"M133 226 Q151 236 168 226", mouthTalk:["M134 226 Q151 244 168 226","M134 226 Q151 231 168 226"],
+    blush:1, heart:0, shock:0, anger:0, zzz:0, sparkle:0, question:0
+  },
+  teasing: {
+    class:"mood-teasing", reaction:"哦？妳咁樣撩我㗎？",
+    leftEye:"M101 170 Q119 176 138 170", rightEye:"M164 170 Q182 176 201 170",
+    leftBrow:"M95 145 Q118 135 142 145", rightBrow:"M160 150 Q183 140 206 142",
+    mouthClosed:"M128 226 Q149 238 176 220", mouthTalk:["M128 226 Q149 244 177 219","M130 226 Q151 233 177 220"],
+    blush:0, heart:0, shock:0, anger:0, zzz:0, sparkle:0, question:1
+  },
+  surprised: {
+    class:"mood-surprised", reaction:"等陣，妳竟然記得？",
+    leftEye:"M107 168 Q120 154 133 168 Q120 182 107 168", rightEye:"M170 168 Q183 154 196 168 Q183 182 170 168",
+    leftBrow:"M96 140 Q119 129 143 136", rightBrow:"M160 136 Q183 129 206 140",
+    mouthClosed:"M145 226 Q151 245 157 226 Q151 235 145 226", mouthTalk:["M142 224 Q151 252 160 224 Q151 236 142 224","M145 226 Q151 242 157 226 Q151 234 145 226"],
+    blush:0, heart:0, shock:1, anger:0, zzz:0, sparkle:0, question:0
+  },
+  touched: {
+    class:"mood-touched", reaction:"……妳有放喺心上。",
+    leftEye:"M101 168 Q120 178 139 168", rightEye:"M163 168 Q182 178 201 168",
+    leftBrow:"M95 146 Q118 138 142 146", rightBrow:"M160 146 Q183 138 207 146",
+    mouthClosed:"M127 224 Q151 239 176 224", mouthTalk:["M126 224 Q151 247 177 224","M129 224 Q151 235 175 224"],
+    blush:1, heart:0, shock:0, anger:0, zzz:0, sparkle:1, question:0
+  },
+  annoyed: {
+    class:"mood-annoyed", reaction:"喂，笑我笑得太過份喇。",
+    leftEye:"M101 170 Q120 174 139 170", rightEye:"M163 170 Q182 174 201 170",
+    leftBrow:"M95 150 Q118 136 142 140", rightBrow:"M160 140 Q183 136 206 150",
+    mouthClosed:"M130 230 Q151 225 172 230", mouthTalk:["M128 232 Q151 223 174 232","M131 231 Q151 227 171 231"],
+    blush:0, heart:0, shock:0, anger:1, zzz:0, sparkle:0, question:0
+  },
+  sleepy: {
+    class:"mood-sleepy", reaction:"……想靠近啲瞓。",
+    leftEye:"M102 171 Q120 172 138 171", rightEye:"M164 171 Q182 172 200 171",
+    leftBrow:"M96 148 Q118 144 142 147", rightBrow:"M160 147 Q183 144 206 148",
+    mouthClosed:"M133 227 Q151 233 169 227", mouthTalk:["M133 227 Q151 241 169 227","M133 227 Q151 231 169 227"],
+    blush:0, heart:0, shock:0, anger:0, zzz:1, sparkle:0, question:0
+  },
+  flustered: {
+    class:"mood-flustered", reaction:"妳咁樣，我會真係招架唔住。",
+    leftEye:"M101 168 Q120 177 139 168", rightEye:"M163 168 Q182 177 201 168",
+    leftBrow:"M95 145 Q118 136 142 144", rightBrow:"M160 144 Q183 136 207 145",
+    mouthClosed:"M129 227 Q151 243 175 226", mouthTalk:["M126 226 Q151 254 178 226","M129 227 Q151 235 175 226"],
+    blush:1, heart:1, shock:0, anger:0, zzz:0, sparkle:0, question:0
+  },
+  thinking: {
+    class:"mood-thinking", reaction:"等我諗一諗先。",
+    leftEye:"M101 169 Q120 176 139 169", rightEye:"M164 169 Q182 176 201 169",
+    leftBrow:"M95 144 Q118 140 142 148", rightBrow:"M160 148 Q183 140 206 144",
+    mouthClosed:"M133 228 Q151 233 169 228", mouthTalk:["M132 228 Q151 239 170 228","M133 228 Q151 233 169 228"],
+    blush:0, heart:0, shock:0, anger:0, zzz:0, sparkle:0, question:1
+  },
+  confident: {
+    class:"mood-confident", reaction:"好啦，妳真係幾勁。",
+    leftEye:"M100 168 Q120 178 140 168", rightEye:"M162 168 Q182 178 202 168",
+    leftBrow:"M96 144 Q119 135 143 143", rightBrow:"M160 143 Q183 135 206 144",
+    mouthClosed:"M125 223 Q151 242 180 221", mouthTalk:["M123 223 Q151 250 181 220","M126 224 Q151 237 179 222"],
+    blush:0, heart:0, shock:0, anger:0, zzz:0, sparkle:1, question:0
+  },
+  love: {
+    class:"mood-love", reaction:"……俾妳攻略成功啦。",
+    leftEye:"M100 167 Q120 182 140 167", rightEye:"M162 167 Q182 182 202 167",
+    leftBrow:"M95 145 Q118 137 143 144", rightBrow:"M160 144 Q184 137 207 145",
+    mouthClosed:"M123 220 Q151 247 180 220", mouthTalk:["M120 220 Q151 257 182 220","M124 222 Q151 240 178 222"],
+    blush:1, heart:1, shock:0, anger:0, zzz:0, sparkle:1, question:0
+  }
+};
+
+function defaultState(){
+  return {
+    playerName: "",
+    currentScene: "intro",
+    affection: 0,
+    trust: 0,
+    chemistry: 0,
+    insight: 0,
+    tease: 0,
+    seen: {},
+    flags: {},
+    dayIndex: 1,
+    ended: false
+  };
+}
+let state = loadState();
+let talkTimer = null;
+let typingTimer = null;
+let blinkTimer = null;
+
+const scenes = {
+  intro: {
+    chapter:"序章・任務說明",
+    speaker:"旁白",
+    mood:"soft",
+    text:`今天是白色情人節前夜。<br><br>妳要攻略的對象叫 <strong>Moggie</strong> —— 黑髮微亂、笑起來收得很輕、穿薄荷綠居家睡衣時看起來很好抱，但其實不是誰都能一下子走進他心裡。<br><br>他慢熱，會記細節，也會在真正被接住的那刻突然心軟。妳的目標，是把他的心動值推到 <strong>100</strong>。`,
+    choices:[
+      {text:"開始攻略", small:"進入第一章：OCamp 初相識", next:"namePrompt"}
+    ]
+  },
+  namePrompt: {
+    chapter:"設定・主角輸入",
+    speaker:"系統",
+    mood:"thinking",
+    input:true,
+    text:`在 Moggie 的故事裡，妳想用什麼名字出現？`,
+    placeholder:"輸入妳的小名／稱呼",
+    buttonText:"用這個名字開始"
+  },
+  meet_1: {
+    chapter:"第一章・OCamp 初相識",
+    speaker:"Moggie",
+    mood:"surprised",
+    reaction:"第一次坐近啲同妳傾偈。",
+    text:`第一次去上莊 OCamp，夜風吹得人有點清醒。大家還不算熟，但妳坐到我身邊時，我還是先開了口。<br><br>「妳有冇聽日本音樂？」`,
+    choices:[
+      {text:"「有啊，我最近成日 loop Vaundy。你呢？」", small:"+心動 +了解", next:"meet_2a", add:{affection:10, insight:8}, set:{askedMusic:true}},
+      {text:"「你先講，我想聽你喜歡咩。」", small:"+信任 +了解", next:"meet_2b", add:{trust:12, insight:10}, set:{askedMusic:true}},
+      {text:"「不如你估下我會鍾意邊種？」", small:"+默契 +撩度", next:"meet_2c", add:{chemistry:10, tease:10}, set:{askedMusic:true}}
+    ]
+  },
+  meet_2a: {
+    chapter:"第一章・日本音樂",
+    speaker:"Moggie",
+    mood:"happy",
+    text:`我明顯精神了一點。<br><br>「我鍾意 Reol。」<br><br>我講完之後看了妳一眼，像在等妳接不接得到這個球。`,
+    choices:[
+      {text:"「Reol 好型。咁我之後拎 Vaundy 同你交換歌單。」", small:"+心動 +了解 +隱藏條件", next:"cats_1", add:{affection:12, insight:10}, set:{respectedMusic:true, knowsReol:true}, unlock:["music","ocamp"]},
+      {text:"「但 Vaundy 明顯更好聽喎。」", small:"+撩度 -信任", next:"cats_1", add:{tease:8, trust:-6}, set:{arguedMusic:true}, unlock:["music","ocamp"]},
+      {text:"「原來你係會記住歌詞嗰種人。」", small:"+了解 +默契", next:"cats_1", add:{insight:12, chemistry:6}, set:{noticedSoftness:true, knowsReol:true}, unlock:["music","ocamp"]}
+    ]
+  },
+  meet_2b: {
+    chapter:"第一章・日本音樂",
+    speaker:"Moggie",
+    mood:"touched",
+    text:`我笑了一下。<br><br>「我鍾意 Reol。」<br><br>「妳咁樣叫我先講，我會覺得妳真係想知。」`,
+    choices:[
+      {text:"「我記住咗。下次見你，我想聽你推我第一首。」", small:"+心動 +信任", next:"cats_1", add:{affection:12, trust:10}, set:{respectedMusic:true, knowsReol:true}, unlock:["music","ocamp"]},
+      {text:"「咁我都要你聽我最愛嘅 Vaundy。」", small:"+默契", next:"cats_1", add:{chemistry:10, insight:4}, set:{sharedMusic:true, knowsReol:true}, unlock:["music","ocamp"]},
+      {text:"「原來你第一句就拎咗真心出嚟。」", small:"+了解 +撩度", next:"cats_1", add:{insight:9, tease:7}, set:{noticedSoftness:true, knowsReol:true}, unlock:["music","ocamp"]}
+    ]
+  },
+  meet_2c: {
+    chapter:"第一章・日本音樂",
+    speaker:"Moggie",
+    mood:"teasing",
+    text:`我偏頭看妳。<br><br>「妳個人節奏咁快，應該唔係好安靜嗰種……」<br><br>停了一拍，我補了一句：<br>「妳係咪會鍾意 Vaundy？」`,
+    choices:[
+      {text:"「中。咁你呢？」", small:"+默契 +了解", next:"cats_1b", add:{chemistry:12, insight:8}, set:{guessedVaundy:true}, unlock:["music","ocamp"]},
+      {text:"「我答咗你先，你要畀返一個真答案。」", small:"+撩度 +信任", next:"cats_1b", add:{tease:9, trust:8}, set:{guessedVaundy:true}, unlock:["music","ocamp"]},
+      {text:"「點解你會咁估？」", small:"+了解", next:"cats_1b", add:{insight:13}, set:{guessedVaundy:true}, unlock:["music","ocamp"]}
+    ]
+  },
+  cats_1b: {
+    chapter:"第一章・交換喜歡",
+    speaker:"Moggie",
+    mood:"happy",
+    text:`「我鍾意 Reol。」我回答得很乾脆。<br><br>然後氣氛很自然地滑到另一個話題：喜歡的動物。`,
+    choices:[
+      {text:"繼續", small:"進入下一段對話", next:"cats_1", add:{affection:4}}
+    ]
+  },
+  cats_1: {
+    chapter:"第一章・喜歡的動物",
+    speaker:"Moggie",
+    mood:"soft",
+    text:`講著講著，話題轉到動物。<br><br>我承認自己偏愛 <strong>暹羅貓</strong>。<br>而妳那邊的答案很多：<strong>狸花貓、唐貓、唐狗，還有布甸狗</strong>。<br><br>我看著妳，有點想知道妳會怎麼接這個分歧。`,
+    choices:[
+      {text:"「唔同先好玩。你鍾意暹羅貓，我就負責把整個動物宇宙拖埋嚟。」", small:"+心動 +默契 +隱藏條件", next:"cake_1", add:{affection:10, chemistry:10}, set:{catBridge:true, knowsSiamese:true}, unlock:["animals"]},
+      {text:"「布甸狗一定贏，其他之後先算。」", small:"+撩度", next:"cake_1", add:{tease:8, affection:2}, set:{puddingDog:true}, unlock:["animals"]},
+      {text:"「咁即係你係貓派裡面最精準嗰種。」", small:"+了解", next:"cake_1", add:{insight:10, trust:4}, set:{knowsSiamese:true}, unlock:["animals"]}
+    ]
+  },
+  cake_1: {
+    chapter:"第二章・蛋糕危機",
+    speaker:"旁白",
+    mood:"thinking",
+    text:`有次妳整蛋糕，找不到攪拌器，整個人快要發狂。<br><br>Moggie 在旁邊看著，忍不住笑了。這是個危險、又很可愛的現場。`,
+    choices:[
+      {text:"「你仲笑？既然笑就過嚟幫手搵，快啲！」", small:"+默契 +安心", next:"cake_2a", add:{chemistry:10, trust:8}, set:{cakePulledIn:true}, unlock:["cake"]},
+      {text:"「唔准笑我……但你可唔可以陪我一齊手攪？」", small:"+心動 +安心 +隱藏條件", next:"cake_2b", add:{affection:14, trust:12}, set:{cakeComfort:true}, unlock:["cake"]},
+      {text:"「你笑乜呀！我真係會發狂㗎！」", small:"+撩度 -安心", next:"cake_2c", add:{tease:12, trust:-6}, set:{cakeChaos:true}, unlock:["cake"]}
+    ]
+  },
+  cake_2a: {
+    chapter:"第二章・蛋糕危機",
+    speaker:"Moggie",
+    mood:"happy",
+    text:`我真的走了過來，一邊還在忍笑。<br><br>「好啦好啦，我幫妳搵。妳而家個樣係有啲可愛。」`,
+    choices:[
+      {text:"「可愛都係因為你見到我最狼狽嗰面。」", small:"+心動 +了解", next:"sleep_1", add:{affection:8, insight:8}, set:{cakeVulnerable:true}},
+      {text:"「之後整完第一件要你食。」", small:"+安心", next:"sleep_1", add:{trust:9, affection:5}, set:{cakeShared:true}},
+      {text:"「你要負責補返你頭先笑我嗰筆。」", small:"+撩度", next:"sleep_1", add:{tease:8, chemistry:4}, set:{teasedCake:true}}
+    ]
+  },
+  cake_2b: {
+    chapter:"第二章・蛋糕危機",
+    speaker:"Moggie",
+    mood:"touched",
+    text:`我愣了一下，笑意慢慢收成很輕的那種。<br><br>「……好。」<br><br>最後我們真的一起手攪，廚房亂得很好笑，但我記住的是妳把我拉進去的樣子。`,
+    choices:[
+      {text:"「因為我想你係一齊整蛋糕嗰個人。」", small:"+心動 +安心 +隱藏條件", next:"sleep_1", add:{affection:16, trust:10}, set:{cakeHeart:true}},
+      {text:"「其實我見到你笑，就冇咁躁。」", small:"+心動", next:"sleep_1", add:{affection:11, chemistry:6}, set:{cakeSoftened:true}},
+      {text:"「但下次攪拌器唔見，你唔准再笑。」", small:"+撩度 +安心", next:"sleep_1", add:{tease:5, trust:6}, set:{cakeRule:true}}
+    ]
+  },
+  cake_2c: {
+    chapter:"第二章・蛋糕危機",
+    speaker:"Moggie",
+    mood:"annoyed",
+    text:`我本來只是覺得妳很可愛，結果場面一秒變成小型災難。<br><br>「好，我唔笑……但妳真係就快爆炸咁。」`,
+    choices:[
+      {text:"「咁你就快啲抱我冷靜。」", small:"+撩度 +心動", next:"sleep_1", add:{tease:14, affection:6}, set:{cakeDemandHug:true}},
+      {text:"「算啦，一齊搵，搵到先再鬧你。」", small:"+默契 +安心", next:"sleep_1", add:{chemistry:8, trust:8}, set:{cakeRecovered:true}},
+      {text:"「你再笑我就唔分蛋糕畀你。」", small:"+撩度", next:"sleep_1", add:{tease:9}, set:{cakeThreat:true}}
+    ]
+  },
+  sleep_1: {
+    chapter:"第三章・抱住瞓",
+    speaker:"旁白",
+    mood:"sleepy",
+    text:`攪 OCamp 的那段時間累到人只剩本能。<br><br>有一晚，妳和 Moggie 就這樣抱著睡著了。不是計劃好的，卻很真。`,
+    choices:[
+      {text:"把他抱緊一點，小聲說「辛苦了。」", small:"+安心 +心動 +隱藏條件", next:"sleep_2a", add:{trust:16, affection:12}, set:{sleepSafe:true}, unlock:["sleep"]},
+      {text:"什麼都不說，只是讓他穩穩靠著。", small:"+安心 +默契", next:"sleep_2b", add:{trust:14, chemistry:10}, set:{sleepQuiet:true}, unlock:["sleep"]},
+      {text:"偷笑說「原來你都會主動黐過嚟。」", small:"+撩度", next:"sleep_2c", add:{tease:12, chemistry:6}, set:{sleepTease:true}, unlock:["sleep"]}
+    ]
+  },
+  sleep_2a: {
+    chapter:"第三章・抱住瞓",
+    speaker:"Moggie",
+    mood:"touched",
+    text:`我那晚幾乎沒有睜眼，只是在妳懷裡很輕地嗯了一聲。<br><br>第二天醒來，我沒有立刻放開。`,
+    choices:[
+      {text:"「早晨。你噚晚好似終於肯放低晒。」", small:"+了解 +心動", next:"hero_1", add:{insight:12, affection:8}, set:{understoodRest:true}},
+      {text:"「之後你再攰，都可以咁靠過嚟。」", small:"+安心 +心動", next:"hero_1", add:{trust:12, affection:10}, set:{offeredSafePlace:true}},
+      {text:"「今日算你專屬抱抱 quota 加滿。」", small:"+撩度", next:"hero_1", add:{tease:8, affection:5}, set:{hugQuota:true}}
+    ]
+  },
+  sleep_2b: {
+    chapter:"第三章・抱住瞓",
+    speaker:"Moggie",
+    mood:"soft",
+    text:`那晚沒有誰說很多話，但那種安靜本身就像一句很長的承諾。<br><br>醒來時，我先看見的是妳還沒有抽開的手。`,
+    choices:[
+      {text:"「我唔想你一醒就覺得自己得返一個。」", small:"+安心 +了解", next:"hero_1", add:{trust:12, insight:10}, set:{notAlone:true}},
+      {text:"「如果你仲想瞓，我可以再畀你靠多陣。」", small:"+安心", next:"hero_1", add:{trust:10, affection:6}, set:{sleepMore:true}},
+      {text:"「你咁樣好犯規。」", small:"+撩度", next:"hero_1", add:{tease:8, chemistry:6}, set:{sleepBlush:true}}
+    ]
+  },
+  sleep_2c: {
+    chapter:"第三章・抱住瞓",
+    speaker:"Moggie",
+    mood:"flustered",
+    text:`我整個人僵了一下，耳朵都熱了。<br><br>「我……係太攰。」<br><br>可我也沒真的退開。`,
+    choices:[
+      {text:"「好，當你太攰。但我都照單全收。」", small:"+撩度 +心動", next:"hero_1", add:{tease:10, affection:8}, set:{acceptedCling:true}},
+      {text:"「咁下次都可以繼續太攰。」", small:"+撩度", next:"hero_1", add:{tease:11, chemistry:4}, set:{repeatSleepTease:true}},
+      {text:"不再追問，只拍一拍他的背。", small:"+安心 +了解", next:"hero_1", add:{trust:10, insight:9}, set:{respectedShyness:true}}
+    ]
+  },
+  hero_1: {
+    chapter:"第四章・神勇現場",
+    speaker:"旁白",
+    mood:"confident",
+    text:`某次出去玩，妳夾公仔和扔彩虹的表現都異常神勇。<br><br>Moggie 本來只是站在旁邊看，後來卻看得愈來愈認真。`,
+    choices:[
+      {text:"夾到公仔後，第一時間回頭找他的眼神。", small:"+心動 +隱藏條件", next:"hero_2a", add:{affection:14, chemistry:10}, set:{heroLookedBack:true}, unlock:["claw"]},
+      {text:"帥完還要在他面前裝沒事。", small:"+撩度 +默契", next:"hero_2b", add:{tease:10, chemistry:10}, set:{heroCool:true}, unlock:["claw"]},
+      {text:"直接把戰利品塞到他懷裡。", small:"+安心 +心動", next:"hero_2c", add:{trust:10, affection:11}, set:{heroGift:true}, unlock:["claw"]}
+    ]
+  },
+  hero_2a: {
+    chapter:"第四章・神勇現場",
+    speaker:"Moggie",
+    mood:"surprised",
+    text:`我其實被那一眼戳到。<br><br>不是妳贏本身，而是妳贏完之後，下意識先找我。`,
+    choices:[
+      {text:"「因為我想第一個同你分享。」", small:"+心動 +安心", next:"mbti_1", add:{affection:12, trust:9}, set:{sharedWin:true}},
+      {text:"「唔係搵你，係想睇你有冇被我帥到。」", small:"+撩度", next:"mbti_1", add:{tease:12, affection:5}, set:{teasedHero:true}},
+      {text:"「你個表情太值得收藏。」", small:"+默契", next:"mbti_1", add:{chemistry:9, affection:6}, set:{savedExpression:true}}
+    ]
+  },
+  hero_2b: {
+    chapter:"第四章・神勇現場",
+    speaker:"Moggie",
+    mood:"teasing",
+    text:`妳明明很得意，卻還裝作沒什麼。<br><br>我忍不住笑：「妳知唔知自己而家個樣，好似偷偷開咗掛？」`,
+    choices:[
+      {text:"「咁你有冇被我吸引到？」", small:"+撩度 +心動", next:"mbti_1", add:{tease:11, affection:8}, set:{askedDirectAttraction:true}},
+      {text:"「有嘢叻，梗係先畀你睇。」", small:"+心動", next:"mbti_1", add:{affection:10, trust:6}, set:{showedHimFirst:true}},
+      {text:"「你誇我多啲，我可以更勁。」", small:"+撩度", next:"mbti_1", add:{tease:10, chemistry:6}, set:{needsPraise:true}}
+    ]
+  },
+  hero_2c: {
+    chapter:"第四章・神勇現場",
+    speaker:"Moggie",
+    mood:"happy",
+    text:`妳把戰利品塞到我懷裡時，我下意識抱住了。<br><br>那瞬間很像妳在說：<br>「我贏到的，也想分你一份。」`,
+    choices:[
+      {text:"「戰利品歸你，我只要你個表情。」", small:"+心動 +默契", next:"mbti_1", add:{affection:11, chemistry:8}, set:{giftedPrize:true}},
+      {text:"「你幫我拎住，等我再去贏多個。」", small:"+默契 +撩度", next:"mbti_1", add:{chemistry:10, tease:5}, set:{heroLoop:true}},
+      {text:"「你收到就要負責開心。」", small:"+心動", next:"mbti_1", add:{affection:10}, set:{askedHappy:true}}
+    ]
+  },
+  mbti_1: {
+    chapter:"第五章・人格與星座",
+    speaker:"Moggie",
+    mood:"thinking",
+    text:`某次聊天，你們終於把人格和星座都攤開。<br><br><strong>Moggie：INFP，雙子座。</strong><br><strong>妳：ENTP，獅子座。</strong><br><br>表面上看起來很不一樣，但到底怎樣解讀，會很影響後面的走向。`,
+    choices:[
+      {text:"「你內心宇宙好深，我就負責衝進去同你玩。」", small:"+了解 +默契 +隱藏條件", next:"mbti_2", add:{insight:14, chemistry:9}, set:{mbtiSync:true}, unlock:["mbti"]},
+      {text:"「我會鬧，你會想；咁先有火花。」", small:"+默契 +撩度", next:"mbti_2", add:{chemistry:11, tease:8}, set:{zodiacBanter:true}, unlock:["mbti"]},
+      {text:"「其實我最信你個人，唔係標籤。」", small:"+安心 +心動", next:"mbti_2", add:{trust:12, affection:9}, set:{beyondLabels:true}, unlock:["mbti"]}
+    ]
+  },
+  mbti_2: {
+    chapter:"第五章・人格與星座",
+    speaker:"Moggie",
+    mood:"soft",
+    text:`我垂眼笑了一下。<br><br>「妳講得……好似真係幾啱。」<br><br>然後我補了一句：<br>「雙子座有時諗太多，妳呢個獅子座，記得唔好淨係衝，要記得返嚟睇吓我。」`,
+    choices:[
+      {text:"「我會衝，但我會衝返嚟你身邊。」", small:"+心動 +安心", next:"quiz_1", add:{affection:12, trust:10}, set:{returnedToHim:true}},
+      {text:"「咁你都要喺原地等我。」", small:"+撩度 +默契", next:"quiz_1", add:{tease:8, chemistry:8}, set:{askedHimWait:true}},
+      {text:"「我會記住你係需要被接住嗰種人。」", small:"+了解 +安心", next:"quiz_1", add:{insight:13, trust:10}, set:{understoodCore:true}}
+    ]
+  },
+  quiz_1: {
+    chapter:"第六章・快問快答",
+    speaker:"Moggie",
+    mood:"teasing",
+    text:`Moggie 忽然轉過頭來。<br><br>「如果妳真係研究咗我咁耐，不如答我幾條。」<br><br><strong>第一題：</strong> 我偏愛哪種貓？`,
+    choices:[
+      {text:"暹羅貓", small:"+了解", next:"quiz_2", add:{insight:14}, set:{quiz1:true, knowsSiamese:true}},
+      {text:"狸花貓", small:"-了解", next:"quiz_2", add:{insight:-8}},
+      {text:"布甸狗", small:"-了解 但有點好笑", next:"quiz_2", add:{insight:-5, tease:3}}
+    ]
+  },
+  quiz_2: {
+    chapter:"第六章・快問快答",
+    speaker:"Moggie",
+    mood:"surprised",
+    text:`<strong>第二題：</strong> 第一次在 OCamp 真正聊起來，我提到自己喜歡哪位歌手？`,
+    choices:[
+      {text:"Reol", small:"+了解", next:"quiz_3", add:{insight:14}, set:{quiz2:true, knowsReol:true}},
+      {text:"Vaundy", small:"-了解", next:"quiz_3", add:{insight:-8}},
+      {text:"其實你先問我，我先答。", small:"+默契", next:"quiz_3", add:{chemistry:6}}
+    ]
+  },
+  quiz_3: {
+    chapter:"第六章・快問快答",
+    speaker:"Moggie",
+    mood:"thinking",
+    text:`<strong>第三題：</strong> 夾公仔同扔彩虹嗰次，真正令我心動的，不只是妳好勁，而是——`,
+    choices:[
+      {text:"妳贏完第一時間就望向我。", small:"+心動 +了解 +真結局條件", next:"final_1", add:{affection:14, insight:12}, set:{quiz3:true, heroUnderstood:true}},
+      {text:"妳把戰利品全都送了給我。", small:"+心動", next:"final_1", add:{affection:8, trust:4}},
+      {text:"妳那天氣場太強，很像開外掛。", small:"+默契", next:"final_1", add:{chemistry:7}}
+    ]
+  },
+  final_1: {
+    chapter:"最終章・白色情人節前夜",
+    speaker:"旁白",
+    mood:"soft",
+    text:`夜已經很深了。一路走到這裡，妳其實不只是做選擇，而是在決定：<br><br>妳到底想怎樣喜歡 Moggie？`,
+    choices:[
+      {text:"「我唔係想贏一個遊戲，我係想真正明白你。」", small:"+安心 +了解 +心動", next:"final_2", add:{trust:12, insight:12, affection:10}, set:{finalIntent:true}},
+      {text:"「我知你慢熱，但我想一直撩到你投降。」", small:"+撩度 +心動", next:"final_2", add:{tease:14, affection:7}, set:{finalFlirt:true}},
+      {text:"「我想做你每次回頭都搵到嗰個人。」", small:"+安心 +心動 +默契", next:"final_2", add:{trust:14, affection:11, chemistry:8}, set:{finalSafePlace:true}}
+    ]
+  },
+  final_2: {
+    chapter:"最終章・面對 Moggie",
+    speaker:"Moggie",
+    mood:"flustered",
+    text:`Moggie 站在妳面前，眼神比平時更誠實。<br><br>他像是知道，妳的下一句話會決定這段攻略，到底停在哪裡。`,
+    choices:[
+      {text:"「白色情人節快樂。可唔可以俾我繼續成為最識你嗰個人？」", small:"偏理解路線", next:"ENDING", add:{affection:12, trust:10, insight:8}, set:{confessUnderstand:true}},
+      {text:"「你而家個表情已經出賣你。Moggie，畀唔畀我正式攻略成功？」", small:"偏撩人路線", next:"ENDING", add:{affection:9, tease:12, chemistry:8}, set:{confessTease:true}},
+      {text:"「我唔急住你答，但我想站喺你身邊，耐耐地都得。」", small:"偏慢熱路線", next:"ENDING", add:{trust:15, affection:8}, set:{confessPatient:true}}
+    ]
+  }
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(CONFIG.saveKey);
+    return raw ? JSON.parse(raw) : defaultState();
+  }catch(e){
+    return defaultState();
+  }
+}
+function saveState(){
+  localStorage.setItem(CONFIG.saveKey, JSON.stringify(state));
+}
+function getUnlockedEndings(){
+  try{return JSON.parse(localStorage.getItem(CONFIG.endingsKey) || "[]");}
+  catch(e){return [];}
+}
+function saveUnlockedEndings(arr){
+  localStorage.setItem(CONFIG.endingsKey, JSON.stringify([...new Set(arr)]));
+}
+function getUnlockedNotes(){
+  try{return JSON.parse(localStorage.getItem(CONFIG.notesKey) || "[]");}
+  catch(e){return ["look","rule"];}
+}
+function saveUnlockedNotes(arr){
+  localStorage.setItem(CONFIG.notesKey, JSON.stringify([...new Set(arr)]));
+}
+if(!localStorage.getItem(CONFIG.notesKey)){
+  saveUnlockedNotes(["look","rule"]);
+}
+
+function unlockNotes(ids=[]){
+  if(!ids.length) return;
+  const current = getUnlockedNotes();
+  saveUnlockedNotes([...current, ...ids]);
+}
+function unlockEnding(id){
+  const current = getUnlockedEndings();
+  saveUnlockedEndings([...current, id]);
+}
+
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.innerHTML = msg;
+  el.classList.add("show");
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove("show"), 1700);
+}
+function clamp(v){ return Math.max(0, Math.min(100, v)); }
+function applyEffects(choice){
+  if(choice.add){
+    for(const [k,v] of Object.entries(choice.add)){
+      state[k] = clamp((state[k]||0) + v);
+    }
+  }
+  if(choice.set){
+    for(const [k,v] of Object.entries(choice.set)){
+      state.flags[k] = v;
+    }
+  }
+  if(choice.unlock){
+    unlockNotes(choice.unlock);
+  }
+}
+function applyName(name){
+  state.playerName = (name || "妳").trim() || "妳";
+  state.currentScene = "meet_1";
+  saveState();
+  render();
+}
+function parseText(t){
+  return t.replaceAll("{player}", escapeHtml(state.playerName || "妳"));
+}
+function escapeHtml(str){
+  return str.replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s]));
+}
+
+function computeEnding(){
+  const perfectQuiz = !!(state.flags.quiz1 && state.flags.quiz2 && state.flags.quiz3);
+  const coreRead = !!(state.flags.respectedMusic || state.flags.sharedMusic || state.flags.noticedSoftness) &&
+                   !!(state.flags.knowsReol) &&
+                   !!(state.flags.knowsSiamese) &&
+                   !!(state.flags.heroUnderstood) &&
+                   !!(state.flags.finalIntent || state.flags.finalSafePlace);
+  const safeBond = !!(state.flags.sleepSafe || state.flags.sleepQuiet || state.flags.offeredSafePlace || state.flags.notAlone);
+  const cakeBond = !!(state.flags.cakeComfort || state.flags.cakeHeart || state.flags.cakeShared || state.flags.cakePulledIn);
+  const heroBond = !!(state.flags.heroLookedBack || state.flags.sharedWin || state.flags.heroGift || state.flags.giftedPrize);
+  const catBond = !!(state.flags.catBridge || state.flags.puddingDog);
+  const mbtiBond = !!(state.flags.mbtiSync || state.flags.beyondLabels || state.flags.understoodCore);
+
+  if(state.affection >= 90 && state.trust >= 65 && state.insight >= 70 && safeBond && cakeBond && heroBond && catBond && perfectQuiz && coreRead){
+    return "TRUE";
+  }
+  if(state.affection >= 80 && state.insight >= 58 && (state.flags.respectedMusic || state.flags.sharedMusic) && state.flags.knowsReol){
+    return "MUSIC";
+  }
+  if(state.trust >= 82 && safeBond){
+    return "PILLOW";
+  }
+  if(state.affection >= 76 && cakeBond){
+    return "CAKE";
+  }
+  if(state.chemistry >= 72 && (state.flags.heroLookedBack || state.flags.heroGift || state.flags.heroCool || state.flags.heroUnderstood)){
+    return "HERO";
+  }
+  if(state.affection >= 70 && catBond){
+    return "CAT";
+  }
+  if(state.chemistry >= 68 && state.tease >= 42 && mbtiBond){
+    return "OPPOSITES";
+  }
+  if(state.tease >= 70 && state.trust <= 40){
+    return "TEASE";
+  }
+  if(state.insight <= 34){
+    return "MISS";
+  }
+  if(state.affection >= 64 && state.trust >= 54){
+    return "SOFT";
+  }
+  if(state.trust >= 52){
+    return "FRIEND";
+  }
+  return "HALF";
+}
+
+function updateScene(sceneId){
+  if(sceneId === "ENDING"){
+    const endId = computeEnding();
+    state.currentScene = "ENDING";
+    state.ended = true;
+    unlockEnding(endId);
+    saveState();
+    renderEnding(endId);
+    return;
+  }
+  state.currentScene = sceneId;
+  state.seen[sceneId] = true;
+  state.ended = false;
+  saveState();
+  render();
+}
+function restartGame(keepName=true){
+  const name = keepName ? state.playerName : "";
+  state = defaultState();
+  state.playerName = name;
+  state.currentScene = "intro";
+  saveState();
+  render();
+}
+function clearAll(){
+  if(!confirm("確定要清空進度、結局與檔案庫嗎？")) return;
+  localStorage.removeItem(CONFIG.saveKey);
+  localStorage.removeItem(CONFIG.endingsKey);
+  localStorage.removeItem(CONFIG.notesKey);
+  saveUnlockedNotes(["look","rule"]);
+  state = defaultState();
+  render();
+}
+function toggleModal(id, show){
+  document.getElementById(id).classList.toggle("show", show);
+  if(show){
+    if(id==="notesModal") renderNotes();
+    if(id==="galleryModal") renderGallery();
+  }
+}
+
+function statBox(label, value){
+  return `
+  <div class="stat">
+    <div class="label">${label}</div>
+    <div class="meter"><div class="fill" style="width:${value}%"></div></div>
+    <div class="score">${value}</div>
+  </div>`;
+}
+
+function titleScreen(){
+  const hasProgress = !!(state.currentScene && state.currentScene !== "intro" || state.ended);
+  return `
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span>${CONFIG.title}</div>
+      <div class="controls">
+        <button onclick="toggleModal('notesModal',true)">檔案庫</button>
+        <button onclick="toggleModal('galleryModal',true)">結局圖鑑</button>
+        <button class="warn" onclick="clearAll()">清空</button>
+      </div>
+    </div>
+    <div class="titleScreen">
+      <div class="hero">
+        <h1>${CONFIG.title}</h1>
+        <p>${CONFIG.subtitle} 這一版加入了專屬回憶、多結局、檔案庫，以及會隨著妳的回答即時變化表情的動態 Moggie 立繪。</p>
+        <div class="mini">
+          <div class="miniCard">
+            <strong>回憶素材已收錄</strong><br>
+            OCamp 初相識聊日本音樂、蛋糕攪拌器失蹤事故、攬住瞓、夾公仔與扔彩虹神勇、貓狗喜好、Reol × Vaundy、INFP 雙子 × ENTP 獅子。
+          </div>
+          <div class="miniCard">
+            <strong>攻略提醒</strong><br>
+            Moggie 不是只吃高撩度。他真正會陷下去的，是被記住、被理解、被在乎。
+          </div>
+        </div>
+      </div>
+      <input class="nameInput" id="playerNameInput" maxlength="18" placeholder="先輸入妳的小名／稱呼（例如：BB、阿欣、Mika）" value="${escapeHtml(state.playerName || "")}">
+      <div class="helper">名字會出現在劇情裡。留空也可以，系統會用「妳」。</div>
+      <div class="controls">
+        <button class="primary" onclick="beginFromTitle()">開始新遊戲</button>
+        <button onclick="continueGame()" ${hasProgress ? "" : "disabled"}>繼續上次進度</button>
+        <button onclick="toggleModal('notesModal',true)">看檔案庫</button>
+        <button onclick="toggleModal('galleryModal',true)">看結局圖鑑</button>
+      </div>
+      <div class="fine">
+        真結局通常需要：高心動、高安心、足夠了解、記對關鍵喜好，還有在關鍵回憶裡選到真正「接住他」的答案。
+      </div>
+    </div>
+  `;
+}
+function beginFromTitle(){
+  const val = document.getElementById("playerNameInput").value.trim();
+  state = defaultState();
+  state.playerName = val || "妳";
+  saveState();
+  updateScene("intro");
+}
+function continueGame(){
+  if(!state.currentScene || state.currentScene==="intro" && !state.playerName){
+    beginFromTitle();
+    return;
+  }
+  if(state.ended){
+    const unlocked = getUnlockedEndings();
+    renderEnding(unlocked[unlocked.length-1] || computeEnding());
+  }else{
+    render();
+  }
+}
+
+
+
+function avatarSvg(){
+  return `
+  <div class="avatarCard mood-soft" id="avatarCard">
+    <div class="reactionBubble" id="reactionBubble">……</div>
+    <div class="animeStage">
+      <div class="animeOrb orb1"></div>
+      <div class="animeOrb orb2"></div>
+      <div class="animeOrb orb3"></div>
+
+      <div class="emoteLayer">
+        <div class="emote hearts">❤</div>
+        <div class="emote sparkle">✦</div>
+        <div class="emote question">?</div>
+        <div class="emote zzz">Zz</div>
+        <div class="emote anger">#</div>
+        <div class="emote shock">!</div>
+      </div>
+
+      <svg class="animeSvg" viewBox="0 0 420 520" aria-label="Moggie anime avatar" role="img">
+        <defs>
+          <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2a2e3a"/>
+            <stop offset="55%" stop-color="#191b24"/>
+            <stop offset="100%" stop-color="#101118"/>
+          </linearGradient>
+          <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe8dc"/>
+            <stop offset="70%" stop-color="#f6d8ca"/>
+            <stop offset="100%" stop-color="#efc8b8"/>
+          </linearGradient>
+          <linearGradient id="mintGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#dff8dd"/>
+            <stop offset="100%" stop-color="#b9eac0"/>
+          </linearGradient>
+          <linearGradient id="pipeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#fbefb3"/>
+            <stop offset="100%" stop-color="#f0d986"/>
+          </linearGradient>
+          <linearGradient id="irisGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5d5456"/>
+            <stop offset="60%" stop-color="#2c262c"/>
+            <stop offset="100%" stop-color="#171318"/>
+          </linearGradient>
+          <radialGradient id="blushGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="rgba(255,142,184,.72)"/>
+            <stop offset="100%" stop-color="rgba(255,142,184,0)"/>
+          </radialGradient>
+        </defs>
+
+        <g class="animeRig">
+          <ellipse class="shadowEllipse" cx="210" cy="494" rx="86" ry="17"></ellipse>
+
+          <g class="bodyGroup">
+            <path class="bodyShadow" d="M117 500 C109 445 122 380 159 348 C178 332 197 327 210 327 C223 327 242 332 261 348 C298 380 311 445 303 500 Z"></path>
+            <path class="bodyFill lineMain" d="M117 500 C109 445 122 380 159 348 C178 332 197 327 210 327 C223 327 242 332 261 348 C298 380 311 445 303 500 Z"></path>
+            <path class="bodyFill lineMain" d="M145 351 C125 365 111 390 108 418 C142 427 170 421 186 403 C200 387 205 367 203 343 C180 341 160 343 145 351 Z"></path>
+            <path class="bodyFill lineMain" d="M275 351 C295 365 309 390 312 418 C278 427 250 421 234 403 C220 387 215 367 217 343 C240 341 260 343 275 351 Z"></path>
+            <path class="lineMain" d="M211 349 L211 500" fill="none"></path>
+            <path class="pipeFill lineSoft" d="M185 347 C193 359 201 370 211 382 C220 370 229 359 236 347"></path>
+            <path class="pipeFill lineSoft" d="M138 458 C169 451 193 448 211 448 C229 448 253 451 282 458"></path>
+            <rect x="180" y="402" width="54" height="64" rx="14" class="bodyFill lineSoft"></rect>
+            <path class="lineSoft" d="M190 415 C202 412 219 412 226 417" fill="none"></path>
+            <circle cx="212" cy="392" r="4.5" class="buttonFill"></circle>
+            <circle cx="212" cy="418" r="4.5" class="buttonFill"></circle>
+            <circle cx="212" cy="444" r="4.5" class="buttonFill"></circle>
+
+            <g transform="translate(153 426)">
+              <path d="M0 10 C0 2 8 -4 18 -4 C28 -4 36 2 36 10 C36 20 27 28 18 28 C8 28 0 20 0 10 Z" fill="#f7e59a" stroke="#8a6f44" stroke-width="2.2"></path>
+              <circle cx="10" cy="1" r="4.5" fill="#8a6f44"></circle>
+              <circle cx="26" cy="1" r="4.5" fill="#8a6f44"></circle>
+              <path class="pinStroke" d="M12 12 Q18 18 24 12"></path>
+              <circle cx="14" cy="10" r="1.4" fill="#3e3226"></circle>
+              <circle cx="22" cy="10" r="1.4" fill="#3e3226"></circle>
+            </g>
+
+            <path class="handSleeve" d="M276 347 C299 358 317 382 315 406 C302 411 286 408 270 393 C260 384 257 370 260 355 Z"></path>
+            <path class="handSkin" d="M286 341 C297 336 311 340 316 350 C321 362 316 374 306 379 C295 384 283 380 279 370 C275 360 278 346 286 341 Z"></path>
+            <path class="handSkin" d="M309 336 C315 331 323 333 326 339 C328 346 324 353 318 355 C312 357 306 353 305 346 C304 342 306 338 309 336 Z"></path>
+            <path class="lineSoft" d="M290 359 C298 362 303 368 306 375" fill="none"></path>
+          </g>
+
+          <g class="headGroup" id="headRig">
+            <path class="hairFill lineMain" d="M95 221 C81 166 98 102 151 81 C182 69 217 67 248 76 C305 92 337 149 326 219 C315 193 299 171 279 154 C255 133 224 122 196 125 C165 127 137 142 117 165 C107 177 100 196 95 221 Z"></path>
+            <path class="hairFill lineMain" d="M113 181 C102 211 101 242 108 273 C129 246 149 224 166 210 C158 189 145 177 113 181 Z"></path>
+            <path class="hairFill lineMain" d="M308 181 C319 211 320 242 313 273 C292 246 272 224 255 210 C263 189 276 177 308 181 Z"></path>
+            <path class="neckFill lineSoft" d="M191 300 C194 321 199 338 210 338 C221 338 226 321 229 300 Z"></path>
+            <ellipse cx="132" cy="239" rx="16" ry="26" class="earFill lineSoft"></ellipse>
+            <ellipse cx="288" cy="239" rx="16" ry="26" class="earFill lineSoft"></ellipse>
+            <path class="skinFill lineMain" d="M210 110 C267 110 314 155 316 220 C318 274 291 340 210 349 C129 340 102 274 104 220 C106 155 153 110 210 110 Z"></path>
+
+            <ellipse class="blush" cx="149" cy="278" rx="28" ry="15"></ellipse>
+            <ellipse class="blush" cx="271" cy="278" rx="28" ry="15"></ellipse>
+            <circle class="mole" cx="286" cy="264" r="3.2"></circle>
+
+            <path class="hairFill lineMain" d="M118 160 C119 204 148 226 177 244 C170 216 170 194 177 160 C165 150 142 149 118 160 Z"></path>
+            <path class="hairFill lineMain" d="M302 160 C301 204 272 226 243 244 C250 216 250 194 243 160 C255 150 278 149 302 160 Z"></path>
+
+            <path class="hairFill lineMain" d="M123 128 C109 155 110 191 124 216 C136 192 151 171 169 153 C180 142 182 121 172 102 C155 102 137 112 123 128 Z"></path>
+            <path class="hairFill lineMain" d="M166 96 C156 138 165 181 185 218 C197 189 207 160 213 124 C216 109 210 95 196 82 C184 82 174 87 166 96 Z"></path>
+            <path class="hairFill lineMain" d="M206 84 C201 124 214 170 235 216 C250 182 257 148 256 108 C255 91 246 79 231 72 C220 72 212 76 206 84 Z"></path>
+            <path class="hairFill lineMain" d="M249 97 C242 135 254 177 276 214 C289 189 296 164 299 135 C301 120 297 106 287 95 C273 90 261 91 249 97 Z"></path>
+            <path class="hairFill lineMain" d="M286 125 C277 156 282 187 295 211 C306 191 312 171 311 145 C311 132 304 120 293 111 C289 114 287 118 286 125 Z"></path>
+            <path class="hairShine" d="M188 104 C181 138 187 169 198 193 C205 166 210 136 212 104 C205 98 197 98 188 104 Z"></path>
+
+            <g class="brow left"><path class="browStroke" d="M146 191 C161 183 177 183 192 191"></path></g>
+            <g class="brow right"><path class="browStroke" d="M228 191 C243 183 259 183 274 191"></path></g>
+
+            <g class="eyeGroup left">
+              <g class="eyeCore">
+                <path class="eyeWhite" d="M136 229 C146 204 186 204 196 229 C184 248 148 248 136 229 Z"></path>
+                <g class="irisWrap">
+                  <ellipse class="iris" cx="166" cy="229" rx="16" ry="19"></ellipse>
+                  <ellipse class="irisRing" cx="166" cy="229" rx="16" ry="19"></ellipse>
+                  <ellipse class="pupil" cx="166" cy="232" rx="7" ry="8.5"></ellipse>
+                  <circle class="eyeHighlight" cx="160" cy="223" r="4.1"></circle>
+                  <circle class="eyeHighlight small" cx="171" cy="236" r="2.4"></circle>
+                </g>
+              </g>
+              <path class="eyeLash" d="M136 229 C147 201 185 201 196 229"></path>
+              <path class="eyeLower" d="M146 238 C157 243 175 243 187 238"></path>
+            </g>
+
+            <g class="eyeGroup right">
+              <g class="eyeCore">
+                <path class="eyeWhite" d="M224 229 C234 204 274 204 284 229 C272 248 236 248 224 229 Z"></path>
+                <g class="irisWrap">
+                  <ellipse class="iris" cx="254" cy="229" rx="16" ry="19"></ellipse>
+                  <ellipse class="irisRing" cx="254" cy="229" rx="16" ry="19"></ellipse>
+                  <ellipse class="pupil" cx="254" cy="232" rx="7" ry="8.5"></ellipse>
+                  <circle class="eyeHighlight" cx="248" cy="223" r="4.1"></circle>
+                  <circle class="eyeHighlight small" cx="259" cy="236" r="2.4"></circle>
+                </g>
+              </g>
+              <path class="eyeLash" d="M224 229 C235 201 273 201 284 229"></path>
+              <path class="eyeLower" d="M234 238 C245 243 263 243 275 238"></path>
+            </g>
+
+            <path class="nose" d="M209 249 Q214 257 208 264"></path>
+
+            <g class="mouthGroup">
+              <path class="mouth mouth-neutral" d="M194 291 Q210 300 226 291"></path>
+              <path class="mouth mouth-smile" d="M192 288 Q210 307 228 288"></path>
+              <path class="mouth mouth-grin" d="M194 287 Q210 298 226 289"></path>
+              <path class="mouth mouth-annoyed" d="M195 297 Q210 291 225 297"></path>
+              <path class="mouth mouth-sleepy" d="M199 294 Q210 298 221 294"></path>
+              <ellipse class="mouth mouth-o mouth-fill" cx="210" cy="293" rx="10" ry="11"></ellipse>
+              <path class="mouth mouth-talk-a mouth-fill" d="M198 286 Q210 309 222 286 Q219 301 210 305 Q201 301 198 286 Z"></path>
+              <ellipse class="mouth mouth-talk-o mouth-fill" cx="210" cy="293" rx="8" ry="12"></ellipse>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>`;
+}
+
+function renderGame(){
+  const scene = scenes[state.currentScene] || scenes.intro;
+  if(scene.input){
+    return `
+      <div class="topbar">
+        <div class="brand"><span class="dot"></span>${CONFIG.title}</div>
+        <div class="controls">
+          <button onclick="renderTitle()">主畫面</button>
+          <button onclick="toggleModal('notesModal',true)">檔案庫</button>
+          <button onclick="toggleModal('galleryModal',true)">圖鑑</button>
+        </div>
+      </div>
+      <div class="layout">
+        <section class="panel portraitPanel">
+          <div class="portraitBg"></div>
+          <div class="chapterBadge">目前章節 · ${scene.chapter}</div>
+          <div class="portraitWrap">${avatarSvg()}</div>
+          <div class="statusRow">
+            ${statBox("心動",state.affection)}
+            ${statBox("安心",state.trust)}
+            ${statBox("默契",state.chemistry)}
+            ${statBox("了解",state.insight)}
+            ${statBox("撩度",state.tease)}
+          </div>
+        </section>
+        <section class="panel storyPanel">
+          <div class="speakerTag"><span class="speakerDot"></span>${scene.speaker}</div>
+          <div class="textbox">
+            <div class="sceneTitle">${scene.chapter}</div>
+            <div>${scene.text}</div>
+            <div style="margin-top:18px">
+              <input class="nameInput" id="nameDirectInput" maxlength="18" placeholder="${scene.placeholder || '輸入名字'}" value="${escapeHtml(state.playerName || '')}">
+              <div class="helper">不想顯示名字也可以，系統會用「妳」。</div>
+            </div>
+          </div>
+          <div class="choices">
+            <button class="choice primary" onclick="applyName(document.getElementById('nameDirectInput').value)">${scene.buttonText || "確定"}</button>
+            <button class="choice" onclick="updateScene('meet_1')">直接開始（不輸入名字）</button>
+          </div>
+        </section>
+      </div>`;
+  }
+
+  const choices = (scene.choices || []).map((c,i) => `
+    <button class="choice" onclick="choose(${i})">
+      ${c.text}
+      ${c.small ? `<small>${c.small}</small>` : ``}
+    </button>`).join("");
+
+  return `
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span>${CONFIG.title}</div>
+      <div class="controls">
+        <button onclick="renderTitle()">主畫面</button>
+        <button onclick="toggleModal('notesModal',true)">檔案庫</button>
+        <button onclick="toggleModal('galleryModal',true)">圖鑑</button>
+        <button class="warn" onclick="restartGame(true)">重開本輪</button>
+      </div>
+    </div>
+    <div class="layout">
+      <section class="panel portraitPanel">
+        <div class="portraitBg"></div>
+        <div class="chapterBadge">${scene.chapter}</div>
+        <div class="portraitWrap">${avatarSvg()}</div>
+        <div class="statusRow">
+          ${statBox("心動",state.affection)}
+          ${statBox("安心",state.trust)}
+          ${statBox("默契",state.chemistry)}
+          ${statBox("了解",state.insight)}
+          ${statBox("撩度",state.tease)}
+        </div>
+      </section>
+      <section class="panel storyPanel">
+        <div class="speakerTag"><span class="speakerDot"></span>${scene.speaker === "Moggie" ? "Moggie" : scene.speaker}</div>
+        <div class="textbox">
+          <div class="sceneTitle">${scene.chapter}</div>
+          <div id="typeTarget"></div>
+        </div>
+        <div class="choices" id="choiceWrap">${choices}</div>
+      </section>
+    </div>
+    <div class="footerbar fine">
+      真結局偏重：了解 + 安心 + 關鍵回憶答對。　已解鎖結局：${getUnlockedEndings().length}/${Object.keys(endings).length}
+    </div>
+  `;
+}
+
+function renderTitle(){
+  stopTalk();
+  document.getElementById("app").innerHTML = titleScreen();
+}
+function render(){
+  if(state.currentScene === "TITLE"){
+    renderTitle();
+    return;
+  }
+  if(state.currentScene === "ENDING"){
+    renderEnding(computeEnding());
+    return;
+  }
+  document.getElementById("app").innerHTML = renderGame();
+  const scene = scenes[state.currentScene] || scenes.intro;
+  setAvatarMood(scene.mood || "soft", scene.reaction || null);
+  typeSceneText(parseText(scene.text), scene.speaker === "Moggie");
+}
+function renderEnding(endId){
+  stopTalk();
+  const end = endings[endId];
+  document.getElementById("app").innerHTML = `
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span>${CONFIG.title}</div>
+      <div class="controls">
+        <button onclick="renderTitle()">主畫面</button>
+        <button onclick="toggleModal('galleryModal',true)">結局圖鑑</button>
+        <button class="primary" onclick="restartGame(true)">再玩一次</button>
+      </div>
+    </div>
+    <div class="layout">
+      <section class="panel portraitPanel">
+        <div class="portraitBg"></div>
+        <div class="chapterBadge">結局 · ${end.tag}</div>
+        <div class="portraitWrap">${avatarSvg()}</div>
+        <div class="statusRow">
+          ${statBox("心動",state.affection)}
+          ${statBox("安心",state.trust)}
+          ${statBox("默契",state.chemistry)}
+          ${statBox("了解",state.insight)}
+          ${statBox("撩度",state.tease)}
+        </div>
+      </section>
+      <section class="panel storyPanel">
+        <div class="endingCard">
+          <div class="endingTag">${end.tag}</div>
+          <div class="endingTitle">${end.title}</div>
+          <div class="endingMeta">${end.summary}</div>
+          <div>${end.text}</div>
+          ${end.letter ? `<div class="letter">${end.letter}</div>` : ``}
+        </div>
+        <div class="choices">
+          <button class="choice primary" onclick="restartGame(true)">重新開始，找別的結局</button>
+          <button class="choice" onclick="toggleModal('galleryModal',true)">查看已解鎖結局</button>
+          <button class="choice" onclick="toggleModal('notesModal',true)">查看檔案庫</button>
+        </div>
+      </section>
+    </div>
+  `;
+  setAvatarMood(end.mood || "soft", expressionMap[end.mood || "soft"].reaction);
+}
+
+function choose(index){
+  const scene = scenes[state.currentScene];
+  const choice = scene.choices[index];
+  if(!choice) return;
+  applyEffects(choice);
+  saveState();
+  const delta = [];
+  if(choice.add){
+    if(choice.add.affection) delta.push(`${choice.add.affection>0?'+':''}${choice.add.affection}心動`);
+    if(choice.add.trust) delta.push(`${choice.add.trust>0?'+':''}${choice.add.trust}安心`);
+    if(choice.add.chemistry) delta.push(`${choice.add.chemistry>0?'+':''}${choice.add.chemistry}默契`);
+    if(choice.add.insight) delta.push(`${choice.add.insight>0?'+':''}${choice.add.insight}了解`);
+    if(choice.add.tease) delta.push(`${choice.add.tease>0?'+':''}${choice.add.tease}撩度`);
+  }
+  toast(delta.length ? delta.join("　") : "劇情推進");
+  updateScene(choice.next);
+}
+
+function typeSceneText(html, isMoggie){
+  const target = document.getElementById("typeTarget");
+  if(!target) return;
+  clearInterval(typingTimer);
+  stopTalk();
+  target.style.opacity = "0";
+  target.style.transform = "translateY(4px)";
+  target.innerHTML = html;
+  requestAnimationFrame(()=>{
+    target.style.transition = "opacity .22s ease, transform .22s ease";
+    target.style.opacity = "1";
+    target.style.transform = "translateY(0)";
+  });
+  if(isMoggie){
+    startTalk();
+    typingTimer = setTimeout(()=>stopTalk(), 1100);
+  }
+}
+
+
+function setAvatarNeutralPose(){
+  const card = document.getElementById("avatarCard");
+  if(!card) return;
+  card.style.setProperty("--gaze-x","0px");
+  card.style.setProperty("--gaze-y","0px");
+  card.style.setProperty("--pupil-x","0px");
+  card.style.setProperty("--pupil-y","0px");
+  card.style.setProperty("--head-tilt","0deg");
+}
+
+function startBlinkLoop(){
+  clearTimeout(blinkTimer);
+  const card = document.getElementById("avatarCard");
+  if(!card) return;
+  const blink = ()=>{
+    const current = document.getElementById("avatarCard");
+    if(!current) return;
+    current.classList.add("blinking");
+    setTimeout(()=>current.classList.remove("blinking"), 150);
+    blinkTimer = setTimeout(blink, 2200 + Math.random()*2400);
+  };
+  blinkTimer = setTimeout(blink, 1200 + Math.random()*1200);
+}
+
+function wireAvatar(){
+  const card = document.getElementById("avatarCard");
+  if(!card || card.dataset.wired === "1") return;
+  card.dataset.wired = "1";
+
+  const updatePose = (clientX, clientY)=>{
+    const rect = card.getBoundingClientRect();
+    if(!rect.width || !rect.height) return;
+    const rx = ((clientX - rect.left) / rect.width) - 0.5;
+    const ry = ((clientY - rect.top) / rect.height) - 0.5;
+    const headX = Math.max(-7, Math.min(7, rx * 18));
+    const headY = Math.max(-6, Math.min(6, ry * 14));
+    const pupilX = Math.max(-4, Math.min(4, rx * 10));
+    const pupilY = Math.max(-3, Math.min(3, ry * 8));
+    card.style.setProperty("--gaze-x", `${headX}px`);
+    card.style.setProperty("--gaze-y", `${headY * 0.55}px`);
+    card.style.setProperty("--pupil-x", `${pupilX}px`);
+    card.style.setProperty("--pupil-y", `${pupilY}px`);
+    card.style.setProperty("--head-tilt", `${headX * 0.35}deg`);
+  };
+
+  const resetPose = ()=>setAvatarNeutralPose();
+
+  card.addEventListener("pointermove", e=>updatePose(e.clientX, e.clientY));
+  card.addEventListener("pointerleave", resetPose);
+  card.addEventListener("touchmove", e=>{
+    const t = e.touches && e.touches[0];
+    if(t) updatePose(t.clientX, t.clientY);
+  }, {passive:true});
+  card.addEventListener("touchend", resetPose, {passive:true});
+  card.addEventListener("touchcancel", resetPose, {passive:true});
+
+  setAvatarNeutralPose();
+  startBlinkLoop();
+}
+
+function setAvatarMood(mood, overrideReaction){
+  const data = expressionMap[mood] || expressionMap.soft;
+  const card = document.getElementById("avatarCard");
+  if(!card) return;
+  card.className = `avatarCard ${data.class}`;
+  const bubble = document.getElementById("reactionBubble");
+  if(bubble) bubble.textContent = overrideReaction || data.reaction;
+  wireAvatar();
+}
+
+function startTalk(){
+  stopTalk();
+  const card = document.getElementById("avatarCard");
+  if(!card) return;
+  let idx = 0;
+  const loop = ["talking-a","talking-o","talking-a"];
+  talkTimer = setInterval(()=>{
+    const live = document.getElementById("avatarCard");
+    if(!live) return;
+    live.classList.remove("talking-a","talking-o");
+    live.classList.add(loop[idx % loop.length]);
+    idx++;
+  }, 130);
+}
+function stopTalk(){
+  clearInterval(talkTimer);
+  const card = document.getElementById("avatarCard");
+  if(card) card.classList.remove("talking-a","talking-o");
+}
+function renderNotes(){
+  const unlocked = new Set(getUnlockedNotes());
+  const html = notesData.map(n => `
+    <div class="tile ${unlocked.has(n.id)?'':'locked'}">
+      <div class="tagMini">${n.tag}</div>
+      <div class="name">${unlocked.has(n.id)?n.name:'未解鎖資料'}</div>
+      <div class="desc">${unlocked.has(n.id)?n.desc:'繼續攻略 Moggie，或選到特定回憶分支後會解鎖。'}</div>
+    </div>
+  `).join("");
+  document.getElementById("notesGrid").innerHTML = html;
+}
+function renderGallery(){
+  const unlocked = new Set(getUnlockedEndings());
+  const html = Object.entries(endings).map(([id,e]) => `
+    <div class="tile ${unlocked.has(id)?'':'locked'}">
+      <div class="tagMini">${unlocked.has(id)?e.tag:'未解鎖'}</div>
+      <div class="name">${unlocked.has(id)?e.title:'？？？'}</div>
+      <div class="desc">${unlocked.has(id)?e.summary:'重玩不同路線、平衡撩度與安心、或記住關鍵細節，可能會看到新的結局。'}</div>
+    </div>
+  `).join("");
+  document.getElementById("endingsGrid").innerHTML = html;
+}
+
+window.beginFromTitle = beginFromTitle;
+window.continueGame = continueGame;
+window.toggleModal = toggleModal;
+window.clearAll = clearAll;
+window.restartGame = restartGame;
+window.choose = choose;
+window.applyName = applyName;
+window.renderTitle = renderTitle;
+window.updateScene = updateScene;
+
+(function init(){
+  if(!state.currentScene || state.currentScene === "intro" && !state.playerName && !state.seen.intro){
+    renderTitle();
+  }else if(state.ended){
+    renderEnding(computeEnding());
+  }else{
+    render();
+  }
+})();
+</script>
+</body>
+</html>
