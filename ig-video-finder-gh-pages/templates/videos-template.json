@@ -1,0 +1,19 @@
+[
+  {
+    "id": "video-001",
+    "platform": "Instagram",
+    "title": "示例影片標題",
+    "url": "https://www.instagram.com/reel/your-real-url/",
+    "language": "Cantonese",
+    "creator": "@your_account",
+    "durationSec": 24,
+    "publishedAt": "2026-03-01",
+    "products": ["coffee cup", "espresso machine"],
+    "backgroundColors": ["pink", "beige"],
+    "hashtags": ["#cafe", "#coffee"],
+    "objects": ["counter", "lamp"],
+    "scene": "cozy cafe interior",
+    "summary": "這是一段示例影片簡介",
+    "notes": "可填入其他分析備註"
+  }
+]
