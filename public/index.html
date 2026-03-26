@@ -1,136 +1,109 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IG 影片收集分析器 V4</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IG Video Finder V5A</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <main class="app-shell">
+  <div class="container">
     <header class="hero">
-      <div class="badge">V4 · IG First</div>
-      <h1>Instagram 影片收集分析器</h1>
-      <p>不再假裝可匿名精準全網搜 IG。這版改成真正可用流程：先在 Instagram 搜尋，再把可見 Reel / Post 收集回來，交給網站分析與排序。</p>
+      <div>
+        <h1>IG Video Finder V5A</h1>
+        <p>Chrome Extension 負責 Instagram 搜尋與收集，網站負責分析、排序、匯出。</p>
+      </div>
+      <div class="hero-actions">
+        <a class="btn secondary" href="https://www.instagram.com/" target="_blank" rel="noreferrer">開 Instagram</a>
+      </div>
     </header>
 
-    <section class="panel info-panel">
-      <div class="info-title">建議工作流</div>
-      <ol class="flow-list">
-        <li>先去 Instagram 站內搜尋，例如 hashtag、Explore、Reels、指定帳號。</li>
-        <li>在該頁按 Bookmarklet / Chrome Extension，收集可見貼文連結和簡介片段。</li>
-        <li>貼回這個網站，再按語言、產品字眼、背景主色做篩選與排序。</li>
+    <section class="panel">
+      <h2>使用方法</h2>
+      <ol>
+        <li>先在 Chrome 安裝 extension 並登入 Instagram。</li>
+        <li>用 extension 搜尋並收集結果。</li>
+        <li>把 extension 匯出的 JSON 貼到下面，或直接上傳 JSON。</li>
+        <li>在網站做語言、產品、背景色篩選，再匯出結果。</li>
       </ol>
     </section>
 
-    <section class="grid two-col">
-      <section class="panel">
-        <div class="toolbar align-start">
-          <h2>1. 需求設定</h2>
-          <button id="applyNaturalBtn">套用一句話需求</button>
+    <section class="panel grid-two">
+      <div>
+        <h2>1. 匯入資料</h2>
+        <label class="label">貼上 Extension JSON</label>
+        <textarea id="jsonInput" rows="14" placeholder='把 extension 複製出來的 JSON 貼到這裡'></textarea>
+        <div class="row">
+          <label class="btn secondary upload-btn">
+            上傳 JSON
+            <input id="fileInput" type="file" accept="application/json,.json" hidden />
+          </label>
+          <button id="loadSampleBtn" class="btn secondary">載入示範資料</button>
         </div>
+      </div>
 
-        <label>一句話需求</label>
-        <textarea id="naturalQuery" rows="3" placeholder="例如：搵 IG 英文咖啡片，藍色背景，有 latte / grinder"></textarea>
+      <div>
+        <h2>2. 分析條件</h2>
+        <label class="label">語言</label>
+        <select id="languageFilter">
+          <option value="all">全部</option>
+          <option value="zh">中文</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+          <option value="unknown">未知</option>
+        </select>
 
-        <label>主題關鍵字</label>
-        <input id="query" placeholder="例如：coffee review" />
+        <label class="label">產品關鍵字（逗號分隔）</label>
+        <input id="productInput" type="text" placeholder="例如：coffee, latte, grinder" />
 
-        <div class="grid two-col inner-grid">
-          <div>
-            <label>平台</label>
-            <select id="platforms" multiple>
-              <option value="Instagram" selected>Instagram</option>
-              <option value="TikTok">TikTok</option>
-              <option value="YouTube">YouTube</option>
-              <option value="Facebook">Facebook</option>
-              <option value="X / Twitter">X / Twitter</option>
-            </select>
-          </div>
-          <div>
-            <label>語言</label>
-            <select id="language">
-              <option value="all" selected>全部</option>
-              <option value="en">English</option>
-              <option value="zh">中文</option>
-              <option value="ja">日本語</option>
-              <option value="ko">한국어</option>
-            </select>
-          </div>
+        <label class="label">背景主色</label>
+        <select id="colorFilter">
+          <option value="">全部</option>
+          <option value="red">紅</option>
+          <option value="orange">橙</option>
+          <option value="yellow">黃</option>
+          <option value="green">綠</option>
+          <option value="blue">藍</option>
+          <option value="purple">紫</option>
+          <option value="pink">粉</option>
+          <option value="brown">啡</option>
+          <option value="black">黑</option>
+          <option value="white">白</option>
+          <option value="gray">灰</option>
+          <option value="unknown">未知</option>
+        </select>
+
+        <label class="checkbox">
+          <input id="strictMode" type="checkbox" />
+          嚴格模式（所有條件都要符合）
+        </label>
+
+        <div class="row">
+          <button id="analyzeBtn" class="btn">分析</button>
+          <button id="resetBtn" class="btn secondary">重置</button>
         </div>
+      </div>
+    </section>
 
-        <div class="grid two-col inner-grid">
-          <div>
-            <label>背景主色</label>
-            <select id="color">
-              <option value="">不限</option>
-              <option value="red">red</option>
-              <option value="orange">orange</option>
-              <option value="yellow">yellow</option>
-              <option value="green">green</option>
-              <option value="blue">blue</option>
-              <option value="purple">purple</option>
-              <option value="pink">pink</option>
-              <option value="brown">brown</option>
-              <option value="black">black</option>
-              <option value="white">white</option>
-              <option value="gray">gray</option>
-            </select>
-          </div>
-          <div>
-            <label>產品字眼</label>
-            <input id="products" placeholder="例如：latte, grinder, beans" />
-          </div>
-        </div>
-
-        <div class="grid two-col inner-grid">
-          <label class="checkbox-row"><input id="strictMode" type="checkbox" /> 嚴格模式</label>
-          <label class="checkbox-row"><input id="forceFetch" type="checkbox" /> 強制補抓頁面資料</label>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="toolbar align-start">
-          <h2>2. 貼上收集資料</h2>
-          <div class="action-row compact">
-            <button id="sampleCollectorBtn">示範 JSON</button>
-            <button id="sampleUrlBtn">示範網址</button>
-          </div>
-        </div>
-
-        <label>收集器 JSON / 純網址清單</label>
-        <textarea id="collectorText" rows="14" placeholder="可直接貼上 bookmarklet / extension 複製出來的 JSON，或者每行一條網址"></textarea>
-        <div class="action-row">
-          <button id="analyzeBtn" class="primary">分析並排序</button>
-          <button id="clearBtn">清空</button>
-        </div>
-        <div class="helper-box">
-          <div class="helper-title">Bookmarklet 用法</div>
-          <ol>
-            <li>將 <code>browser_helper/bookmarklet.txt</code> 內容存成瀏覽器書籤。</li>
-            <li>打開 Instagram 搜尋結果頁、Reels 頁、hashtag 頁或指定帳號頁。</li>
-            <li>按一下書籤，會自動複製 JSON 收集結果到剪貼簿。</li>
-            <li>貼回這裡分析。</li>
-          </ol>
-        </div>
-      </section>
+    <section class="panel stats" id="statsPanel">
+      <div class="stat"><span>原始資料</span><strong id="rawCount">0</strong></div>
+      <div class="stat"><span>分析結果</span><strong id="resultCount">0</strong></div>
+      <div class="stat"><span>高分結果</span><strong id="highScoreCount">0</strong></div>
     </section>
 
     <section class="panel">
-      <div class="toolbar">
+      <div class="section-head">
         <h2>結果</h2>
-        <div class="action-row">
-          <button id="exportCsvBtn">匯出 CSV</button>
-          <button id="exportJsonBtn">匯出 JSON</button>
-          <button id="exportHtmlBtn">匯出 HTML</button>
+        <div class="row">
+          <button id="exportCsvBtn" class="btn secondary">匯出 CSV</button>
+          <button id="exportJsonBtn" class="btn secondary">匯出 JSON</button>
         </div>
       </div>
-      <div id="statusText" class="status">未開始</div>
-      <div id="summaryGrid" class="summary-grid"></div>
-      <pre id="debugBox" class="debug-box">debug 會顯示在這裡</pre>
-      <div id="resultsContainer" class="results empty">未有結果</div>
+      <div id="results"></div>
     </section>
-  </main>
-  <script src="/app.js"></script>
+  </div>
+
+  <script src="./app.js"></script>
 </body>
 </html>

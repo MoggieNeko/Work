@@ -1,79 +1,177 @@
-# Instagram 影片收集分析器 V4
+# Social Video Finder V5A — IG-first Website + Chrome Extension
 
-這一版不再假設可以在網站裡匿名精準全網搜尋 Instagram。
+這個版本是 **V5A：免費優先版**。
 
-改為較穩定的實際工作流：
+重點不是網站後端匿名去撞 Instagram，而是：
 
-1. 先在 Instagram 站內搜尋
-2. 用瀏覽器收集器抓當前頁面可見 Reel / Post
-3. 回到網站貼上 JSON
-4. 由網站按主題、語言、產品字眼、背景主色做分析與排序
+- 使用者在自己瀏覽器登入 Instagram
+- Chrome Extension 直接在 Instagram 分頁內執行搜尋 / 打開 hashtag 頁 / 自動捲動收集
+- 收集到的結果輸出成 JSON
+- 網站版 Dashboard 匯入 JSON 後做排序、篩選、匯出
 
-## 適合場景
+這樣比「純網站自動搜 IG」穩定得多，也更接近你原本要的「真係幫我搵」。
 
-- IG 素材搜尋整理
-- 品牌競品內容收集
-- 美妝 / 咖啡 / 時尚等內容初步篩選
-- 交付網址名單和簡報前的 shortlist
+---
 
 ## 專案結構
 
-- `public/`：前端網站
-- `functions/api/analyze.js`：Cloudflare Pages Functions 分析 API
-- `browser_helper/bookmarklet.txt`：一鍵收集器
-- `browser_helper/chrome_extension/`：可選 Chrome Extension 範例
+- `public/`：可直接部署到 GitHub Pages / Cloudflare Pages 的靜態網站
+- `extension/`：Chrome Extension（Load unpacked）
 
-## 部署方式（Cloudflare Pages）
+---
 
-### GitHub + Cloudflare Dashboard
+## 你可以做到什麼
 
-1. 把整個專案上傳到 GitHub repo
-2. Cloudflare Pages → Create application → Pages → Import existing Git repository
-3. 設定：
-   - Framework preset: `None`
-   - Build command: `exit 0`
-   - Build output directory: `public`
-4. Deploy
+### 1) Extension 幫你找 IG 結果
 
-## 使用方法
+Extension 支援兩種模式：
 
-### 方法 A：Bookmarklet
+- **Hashtag 模式**：直接打開 `https://www.instagram.com/explore/tags/<tag>/` 再自動捲動收集
+- **Keyword 模式**：嘗試在 Instagram 網頁版搜尋框輸入關鍵字，再收集當前頁可見貼文 / Reel 連結
 
-1. 打開 `browser_helper/bookmarklet.txt`
-2. 把整段 Javascript 存成瀏覽器書籤
-3. 去 Instagram 搜尋頁 / Reels 頁 / hashtag 頁 / 帳號頁
-4. 按書籤
-5. 工具會複製 JSON 到剪貼簿
-6. 貼回網站分析
+### 2) Website 做分析
 
-### 方法 B：Chrome Extension
+匯入 Extension 的 JSON 後，網站會：
 
-1. 打開 Chrome `chrome://extensions`
-2. 啟用「開發人員模式」
-3. 選「載入未封裝項目」
-4. 指向 `browser_helper/chrome_extension`
-5. 去 Instagram 頁面按工具圖示
-6. 會複製 JSON 到剪貼簿
-7. 貼回網站分析
+- 分析語言（簡單 heuristic）
+- 比對產品關鍵字
+- 顯示背景主色（如果 Extension 成功分析到縮圖）
+- 根據條件打分排序
+- 匯出 CSV / JSON
 
-## 這版的改進
+---
 
-- 改回以 Instagram 為主，不再依賴 YouTube API
-- 不需要先填 YouTube key
-- 以收集器輸出的內容為主做分析，減少匿名抓頁失敗導致 0 結果
-- 加入可信度標記
-- 支援 JSON / 純網址雙模式
-- 保留 Cloudflare Pages 架構，可直接網站上線
+## 部署網站
 
-## 注意
+這個 V5A 網站版 **不需要後端**，因為分析在前端做。
 
-- 如果只貼純網址而沒有收集器 JSON，系統會嘗試補抓頁面資料，但 Instagram 頁面資料可能不完整
-- 背景主色是按縮圖資料估算，不是逐幀影片分析
-- 產品判斷以文字內容命中為主，不是影像 AI 物件辨識
+所以可以直接部署到：
 
-## 建議下一版
+- GitHub Pages
+- Cloudflare Pages
+- Netlify
 
-- 專案管理 / 收藏
-- 多頁批次收集
-- 自動去重與標籤系統
-- 真正的本機或雲端 AI 視覺辨識
+### 最簡單部署
+
+把 `public/` 內的檔案部署出去即可。
+
+如果用 Cloudflare Pages：
+
+- Framework preset: `None`
+- Build command: `exit 0`
+- Build output directory: `public`
+
+如果用 GitHub Pages：
+
+- 建 repo
+- 把 `public/` 內的內容放到 repo root，或者設定 Pages 指向 `public/`
+
+---
+
+## 安裝 Extension
+
+1. 打開 Chrome
+2. 進入 `chrome://extensions/`
+3. 右上角開啟「開發人員模式」
+4. 點「載入未封裝項目」
+5. 選擇這個專案中的 `extension/` 資料夾
+
+---
+
+## 使用流程
+
+### A. 用 Extension 搜 IG
+
+1. 先登入 Instagram 網頁版
+2. 打開 Extension popup
+3. 輸入搜尋字
+4. 選模式：
+   - `Hashtag`：較穩定
+   - `Keyword`：較靈活，但依賴 IG 畫面
+5. 設定最大結果數 / 捲動輪數
+6. 點 `開始搜尋並收集`
+7. 收集完成後，點 `複製 JSON`
+
+### B. 用 Website 分析
+
+1. 打開你部署好的網站
+2. 把 JSON 貼到輸入框，或上傳 JSON
+3. 設定篩選條件：
+   - 語言
+   - 產品關鍵字
+   - 背景主色
+4. 按 `分析`
+5. 查看結果、排序、匯出 CSV / JSON
+
+---
+
+## 注意事項
+
+### 1. Keyword 模式不是官方 API
+
+Keyword 模式屬於瀏覽器頁面自動化，因此會受 Instagram UI 改版影響。
+
+### 2. Hashtag 模式較穩定
+
+如果你的內容類型適合 hashtag 搜尋，例如：
+
+- `#coffee`
+- `#latteart`
+- `#skincare`
+- `#matcha`
+
+建議優先用 Hashtag 模式。
+
+### 3. 背景色分析不是每次都成功
+
+因為某些圖片可能取不到像素資料，所以 Extension 會把顏色標記為 `unknown`。
+
+### 4. 這個版本仍然不是官方全站搜尋
+
+這個版本的本質是：
+
+- 用使用者自己的登入瀏覽器環境去搜尋 / 開頁 / 收集
+- 再由網站整理結果
+
+它比純匿名網站穩定，但仍然受 Instagram 畫面結構影響。
+
+---
+
+## 最建議的搜尋策略
+
+### 穩定度最高
+
+- 用 Hashtag 模式
+- 多試幾組 hashtag
+- 收集後在 Dashboard 內再做產品、語言、顏色篩選
+
+### 例子
+
+找咖啡片：
+
+- `coffee`
+- `latteart`
+- `coffeereview`
+- `specialtycoffee`
+
+找美妝：
+
+- `skincare`
+- `serum`
+- `beautyroutine`
+
+---
+
+## 下一步可升級
+
+### V5B
+
+接付費資料源（Apify / Bright Data）做真正網站端自動搜尋
+
+### V6
+
+- Chrome Extension 正式版 UI
+- 登入帳戶
+- 收藏 / 專案管理
+- AI 視覺辨識（產品 / 背景 / 場景）
+

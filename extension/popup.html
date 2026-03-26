@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IG Video Finder V5A</title>
+  <style>
+    body { font-family: Arial, sans-serif; width: 360px; margin: 0; padding: 14px; background: #101828; color: #f5f7fb; }
+    h1 { font-size: 18px; margin: 0 0 10px; }
+    label { display: block; margin: 10px 0 6px; color: #b7c3d6; font-size: 13px; }
+    input, select, textarea { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.12); background: #152033; color: #fff; }
+    .row { display: flex; gap: 10px; }
+    button { width: 100%; padding: 10px; border-radius: 999px; border: 0; cursor: pointer; font-weight: 700; margin-top: 10px; }
+    .primary { background: linear-gradient(135deg,#62d4ff,#72f0b4); color: #08111d; }
+    .secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.15); }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0e1727; padding: 10px; border-radius: 10px; max-height: 180px; overflow: auto; font-size: 12px; }
+    .hint { font-size: 12px; color: #b7c3d6; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <h1>IG Video Finder V5A</h1>
+  <div class="hint">先打開並登入 Instagram 網頁版，再在 popup 開始搜尋。</div>
+
+  <label>搜尋模式</label>
+  <select id="mode">
+    <option value="hashtag">Hashtag（較穩）</option>
+    <option value="keyword">Keyword（較靈活）</option>
+    <option value="collect">只收集當前頁</option>
+  </select>
+
+  <label>搜尋字</label>
+  <input id="query" type="text" placeholder="例如 coffee / latteart / skincare" />
+
+  <div class="row">
+    <div>
+      <label>最大結果數</label>
+      <input id="maxItems" type="number" min="5" max="150" value="30" />
+    </div>
+    <div>
+      <label>捲動輪數</label>
+      <input id="scrollRounds" type="number" min="1" max="20" value="6" />
+    </div>
+  </div>
+
+  <button id="runBtn" class="primary">開始搜尋並收集</button>
+  <button id="copyBtn" class="secondary">複製 JSON</button>
+  <button id="downloadBtn" class="secondary">下載 JSON</button>
+
+  <label>結果摘要</label>
+  <pre id="status">尚未執行</pre>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "IG Video Finder V5A",
+  "version": "1.0.0",
+  "description": "Search and collect Instagram reel/post results for the V5A dashboard.",
+  "permissions": ["activeTab", "tabs", "scripting", "storage", "downloads", "clipboardWrite"],
+  "host_permissions": [
+    "https://www.instagram.com/*",
+    "https://*.cdninstagram.com/*",
+    "https://*.fbcdn.net/*"
+  ],
+  "action": {
+    "default_title": "IG Video Finder V5A",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
